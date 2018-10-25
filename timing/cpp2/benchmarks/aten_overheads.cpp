@@ -13,8 +13,8 @@ static void BM_TensorTypeId(benchmark::State& state) {
   // initialize some cuda...
   auto tmp = at::empty({0}, options);
 
+  std::cout << "Dry run started!\n";
   tmp.unsafeGetTensorImpl()->type_id();
-
   std::cout << "Dry run is done!\n";
 }
 
@@ -38,6 +38,7 @@ static void BM_TensorType(benchmark::State& state) {
   // initialize some cuda...
   auto tmp = at::empty({0}, options);
 
+  std::cout << "Dry run started!\n";
   tmp.type();
   std::cout << "Dry run is done!\n";
 }
@@ -68,6 +69,7 @@ static void BM_THCCachingAllocatorAllocate(benchmark::State& state) {
     at::DataPtr data = impl->storage().allocator()->allocate(size * 4);
   }
 
+  std::cout << "Dry run started!\n";
   at::DataPtr data = impl->storage().allocator()->allocate(size * 4);
   std::cout << "Dry run is done!\n";
 }
@@ -99,6 +101,7 @@ static void BM_TensorIsCuda(benchmark::State& state) {
   // initialize some cuda...
   auto tmp = at::empty({0}, options);
 
+  std::cout << "Dry run started!\n";
   tmp.is_cuda();
   std::cout << "Dry run is done!\n";
 }
@@ -121,6 +124,7 @@ static void BM_TensorDim(benchmark::State& state) {
   // initialize some cuda...
   auto tmp = at::empty({0}, options);
 
+  std::cout << "Dry run started!\n";
   tmp.dim();
   std::cout << "Dry run is done!\n";
 }
@@ -143,6 +147,7 @@ static void BM_TensorIsSparse(benchmark::State& state) {
   // initialize some cuda...
   auto tmp = at::empty({0}, options);
 
+  std::cout << "Dry run started!\n";
   tmp.is_sparse();
   std::cout << "Dry run is done!\n";
 }
@@ -165,6 +170,7 @@ static void BM_TensorTypeIsCuda(benchmark::State& state) {
   // initialize some cuda...
   auto tmp = at::empty({0}, options);
 
+  std::cout << "Dry run started!\n";
   tmp.type().is_cuda();
   std::cout << "Dry run is done!\n";
 }
@@ -187,6 +193,7 @@ static void BM_TensorNumel(benchmark::State& state) {
   // initialize some cuda...
   auto tmp = at::empty({0}, options);
 
+  std::cout << "Dry run started!\n";
   tmp.numel();
   std::cout << "Dry run is done!\n";
 }
@@ -210,6 +217,7 @@ static void BM_CudaAPIGetDevice(benchmark::State& state) {
   auto tmp = at::empty({0}, options);
   int32_t device;
 
+  std::cout << "Dry run started!\n";
   cudaGetDevice(&device);
   std::cout << "Dry run is done!\n";
 }
@@ -235,6 +243,7 @@ static void BM_CudaAPISetDevice(benchmark::State& state) {
   int32_t device;
   cudaGetDevice(&device);
 
+  std::cout << "Dry run started!\n";
   cudaSetDevice(device);
   std::cout << "Dry run is done!\n";
 }
@@ -260,6 +269,7 @@ static void BM_DynamicCUDAInterfaceGetDevice(benchmark::State& state) {
   auto tmp = at::empty({0}, options);
   int32_t device;
 
+  std::cout << "Dry run started!\n";
   at::detail::DynamicCUDAInterface::get_device(&device);
   std::cout << "Dry run is done!\n";
 }
@@ -285,6 +295,7 @@ static void BM_DynamicCUDAInterfaceSetDevice(benchmark::State& state) {
   int32_t device;
   cudaGetDevice(&device);
 
+  std::cout << "Dry run started!\n";
   at::detail::DynamicCUDAInterface::set_device(device);
   std::cout << "Dry run is done!\n";
 }
@@ -310,6 +321,7 @@ static void BM_StorageImplGetDevice(benchmark::State& state) {
   auto tmp = at::empty({0}, options);
   auto* storage_impl = tmp.unsafeGetTensorImpl()->storage().unsafeGetStorageImpl();
 
+  std::cout << "Dry run started!\n";
   storage_impl->device().index();
   std::cout << "Dry run is done!\n";
 }
@@ -334,6 +346,7 @@ static void BM_TensorImplGetDevice(benchmark::State& state) {
   auto tmp = at::empty({0}, options);
   auto* tensor_impl = tmp.unsafeGetTensorImpl();
 
+  std::cout << "Dry run started!\n";
   tensor_impl->storage().unsafeGetStorageImpl()->device().index();
   std::cout << "Dry run is done!\n";
 }
@@ -358,6 +371,7 @@ static void BM_TensorGetDeviceDirect(benchmark::State& state) {
   // initialize some cuda...
   auto tmp = at::empty({0}, options);
 
+  std::cout << "Dry run started!\n";
   tmp.unsafeGetTensorImpl()->storage().unsafeGetStorageImpl()->device().index();
   std::cout << "Dry run is done!\n";
 }
@@ -395,6 +409,7 @@ static void BM_TensorGetDevice(benchmark::State& state) {
   // initialize some cuda...
   auto tmp = at::empty({0}, options);
 
+  std::cout << "Dry run started!\n";
   tmp.get_device();
   std::cout << "Dry run is done!\n";
 }
@@ -420,6 +435,7 @@ static void BM_DeviceGuardCtor(benchmark::State& state) {
 
   new (mem) at::DeviceGuard(tmp);
 
+  std::cout << "Dry run started!\n";
   free(mem);
   std::cout << "Dry run is done!\n";
 }
@@ -445,6 +461,7 @@ static void BM_DeviceGuard(benchmark::State& state) {
   // initialize some cuda...
   auto tmp = at::empty({0}, options);
 
+  std::cout << "Dry run started!\n";
   {
     const at::DeviceGuard guard(tmp);
   }
@@ -473,6 +490,7 @@ static void BM_EmptyTensorNoopResize(benchmark::State& state) {
   auto tmp = at::empty({0}, options);
   tmp.resize_(sizes);
   
+  std::cout << "Dry run started!\n";
   tmp.resize_(sizes);
   std::cout << "Dry run is done!\n";
 }
@@ -513,6 +531,7 @@ static void BM_TensorNoopResize(benchmark::State& state) {
   auto tmp = at::empty({0}, options);
   tmp.resize_(sizes);
 
+  std::cout << "Dry run started!\n";
   tmp.resize_(sizes);
   std::cout << "Dry run is done!\n";
 }
@@ -536,6 +555,7 @@ static void BM_TensorAsStrided(benchmark::State& state) {
   std::vector<long int> strides({1, 300});
   std::vector<long int> sizes({300, 8});
 
+  std::cout << "Dry run started!\n";
   tensor.as_strided(strides, sizes);
   std::cout << "Dry run is done!\n";
 }
@@ -556,6 +576,7 @@ static void BM_AtenEmptyCuda(benchmark::State& state) {
   // initialize some cuda...
   auto tmp = at::empty({0}, options);
 
+  std::cout << "Dry run started!\n";
   auto tensor = at::native::empty_cuda({0}, options);
   std::cout << "Dry run is done!\n";
 }
@@ -578,6 +599,7 @@ static void BM_AtenEmpty(benchmark::State& state) {
   // initialize some cuda...
   auto tmp = at::empty({0}, options);
 
+  std::cout << "Dry run started!\n";
   auto tensor = at::empty({0}, options);
   std::cout << "Dry run is done!\n";
 }
@@ -600,6 +622,7 @@ static void BM_VariableEmpty(benchmark::State& state) {
   // initialize some cuda...
   auto tmp = torch::empty({0}, options);
 
+  std::cout << "Dry run started!\n";
   auto tensor = torch::empty({0}, options);
   std::cout << "Dry run is done!\n";
 }
@@ -624,6 +647,7 @@ static void BM_AtenEmptyResize(benchmark::State& state) {
   auto tmp = at::empty({0}, options);
   tmp.resize_(sizes);
 
+  std::cout << "Dry run started!\n";
   auto tensor = at::empty({0}, options);
   tensor.resize_(sizes);
   std::cout << "Dry run is done!\n";
@@ -651,6 +675,7 @@ static void BM_AtenEmptyNoResize(benchmark::State& state) {
   auto tmp = at::empty({0}, options);
   tmp.resize_(sizes);
 
+  std::cout << "Dry run started!\n";
   auto tensor = at::empty(sizes, options);
   std::cout << "Dry run is done!\n";
 }
@@ -679,6 +704,7 @@ static void BM_VariableEmptyResize(benchmark::State& state) {
   auto tmp = torch::empty(zero, options);
   tmp.resize_(sizes);
 
+  std::cout << "Dry run started!\n";
   auto tensor = torch::empty(zero, options);
   tensor.resize_(sizes);
   std::cout << "Dry run is done!\n";
@@ -709,6 +735,7 @@ static void BM_VariableEmptyNoResize(benchmark::State& state) {
   auto tmp = torch::empty(zero, options);
   tmp.resize_(sizes);
 
+  std::cout << "Dry run started!\n";
   torch::empty(sizes, options);
   std::cout << "Dry run is done!\n";
 }
@@ -735,6 +762,7 @@ static void BM_MakeStorage(benchmark::State& state) {
   // initialize some cuda...
   auto tmp = torch::empty({0}, options);
 
+  std::cout << "Dry run started!\n";
   c10::make_intrusive<at::StorageImpl>(
       at::scalarTypeToTypeMeta(options.dtype()),
       0,
@@ -768,14 +796,15 @@ static void BM_StorageCtor(benchmark::State& state) {
 
   void* mem = malloc(sizeof(at::StorageImpl));
 
+  std::cout << "Dry run started!\n";
   new (mem) at::StorageImpl(
       at::scalarTypeToTypeMeta(options.dtype()),
       0,
       at::cuda::getCUDADeviceAllocator(),
       true);
+  std::cout << "Dry run is done!\n";
 
   free(mem);
-  std::cout << "Dry run is done!\n";
 }
 
   auto options = at::TensorOptions(at::kCUDA);
@@ -820,6 +849,7 @@ static void BM_ScalarTypeToTypeMeta(benchmark::State& state) {
   // initialize some cuda...
   auto tmp = torch::empty({0}, options);
 
+  std::cout << "Dry run started!\n";
   at::scalarTypeToTypeMeta(options.dtype());
   std::cout << "Dry run is done!\n";
 }
@@ -849,6 +879,7 @@ static void BM_MakeTensorFromStorage(benchmark::State& state) {
             at::cuda::getCUDADeviceAllocator(),
             true);
 
+  std::cout << "Dry run started!\n";
   at::detail::make_tensor<at::TensorImpl>(storage, at::CUDATensorId(), false);
   std::cout << "Dry run is done!\n";
 }
@@ -886,6 +917,7 @@ static void BM_MakeVariableFromTensor(benchmark::State& state) {
   auto tensor = at::detail::make_tensor<at::TensorImpl>(
       storage_impl, at::CUDATensorId(), false);
 
+  std::cout << "Dry run started!\n";
   torch::autograd::make_variable(tensor, false);
   std::cout << "Dry run is done!\n";
 }
@@ -919,6 +951,7 @@ static void BM_CheckedTensorUnwrap(benchmark::State& state) {
   // initialize some cuda...
   auto tmp = at::empty({0}, options);
 
+  std::cout << "Dry run started!\n";
   at::checked_tensor_unwrap(tmp,"self",1, false, at::Backend::CUDA, at::ScalarType::Float);
   std::cout << "Dry run is done!\n";
 }
