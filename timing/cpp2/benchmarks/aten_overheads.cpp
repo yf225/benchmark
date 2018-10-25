@@ -4,6 +4,16 @@
 #include <ATen/cuda/CUDAContext.h>
 
 static void BM_TensorTypeId(benchmark::State& state) {
+  {
+  auto options = at::TensorOptions(at::kCUDA);
+  std::vector<long int> sizes({64, 2048});
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+
+  tmp.unsafeGetTensorImpl()->type_id();
+  }
+
   auto options = at::TensorOptions(at::kCUDA);
   std::vector<long int> sizes({64, 2048});
 
@@ -17,6 +27,16 @@ static void BM_TensorTypeId(benchmark::State& state) {
 BENCHMARK(BM_TensorTypeId);
 
 static void BM_TensorType(benchmark::State& state) {
+  {
+  auto options = at::TensorOptions(at::kCUDA);
+  std::vector<long int> sizes({64, 2048});
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+
+  tmp.type();
+  }
+
   auto options = at::TensorOptions(at::kCUDA);
   std::vector<long int> sizes({64, 2048});
 
@@ -30,6 +50,22 @@ static void BM_TensorType(benchmark::State& state) {
 BENCHMARK(BM_TensorType);
 
 static void BM_THCCachingAllocatorAllocate(benchmark::State& state) {
+  {
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  int size = 64 * 2048;
+  auto tmp = at::empty({size}, options);
+  auto* impl = tmp.unsafeGetTensorImpl();
+
+  // allocate memory once so that caching allocator has it.
+  {
+    at::DataPtr data = impl->storage().allocator()->allocate(size * 4);
+  }
+
+  at::DataPtr data = impl->storage().allocator()->allocate(size * 4);
+  }
+
   auto options = at::TensorOptions(at::kCUDA);
 
   // initialize some cuda...
@@ -48,7 +84,18 @@ static void BM_THCCachingAllocatorAllocate(benchmark::State& state) {
 }
 BENCHMARK(BM_THCCachingAllocatorAllocate);
 
+
+
 static void BM_TensorIsCuda(benchmark::State& state) {
+  {
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+
+  tmp.is_cuda();
+  }
+
   auto options = at::TensorOptions(at::kCUDA);
 
   // initialize some cuda...
@@ -61,6 +108,15 @@ static void BM_TensorIsCuda(benchmark::State& state) {
 BENCHMARK(BM_TensorIsCuda);
 
 static void BM_TensorDim(benchmark::State& state) {
+  {
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+
+  tmp.dim();
+  }
+
   auto options = at::TensorOptions(at::kCUDA);
 
   // initialize some cuda...
@@ -73,6 +129,15 @@ static void BM_TensorDim(benchmark::State& state) {
 BENCHMARK(BM_TensorDim);
 
 static void BM_TensorIsSparse(benchmark::State& state) {
+  {
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+
+  tmp.is_sparse();
+  }
+
   auto options = at::TensorOptions(at::kCUDA);
 
   // initialize some cuda...
@@ -85,6 +150,15 @@ static void BM_TensorIsSparse(benchmark::State& state) {
 BENCHMARK(BM_TensorIsSparse);
 
 static void BM_TensorTypeIsCuda(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+
+  tmp.type().is_cuda();
+}
+
   auto options = at::TensorOptions(at::kCUDA);
 
   // initialize some cuda...
@@ -97,6 +171,15 @@ static void BM_TensorTypeIsCuda(benchmark::State& state) {
 BENCHMARK(BM_TensorTypeIsCuda);
 
 static void BM_TensorNumel(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+
+  tmp.numel();
+}
+
   auto options = at::TensorOptions(at::kCUDA);
 
   // initialize some cuda...
@@ -109,6 +192,16 @@ static void BM_TensorNumel(benchmark::State& state) {
 BENCHMARK(BM_TensorNumel);
 
 static void BM_CudaAPIGetDevice(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+  int32_t device;
+
+  cudaGetDevice(&device);
+}
+
   auto options = at::TensorOptions(at::kCUDA);
 
   // initialize some cuda...
@@ -122,6 +215,17 @@ static void BM_CudaAPIGetDevice(benchmark::State& state) {
 BENCHMARK(BM_CudaAPIGetDevice);
 
 static void BM_CudaAPISetDevice(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+  int32_t device;
+  cudaGetDevice(&device);
+
+  cudaSetDevice(device);
+}
+
   auto options = at::TensorOptions(at::kCUDA);
 
   // initialize some cuda...
@@ -136,6 +240,16 @@ static void BM_CudaAPISetDevice(benchmark::State& state) {
 BENCHMARK(BM_CudaAPISetDevice);
 
 static void BM_DynamicCUDAInterfaceGetDevice(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+  int32_t device;
+
+  at::detail::DynamicCUDAInterface::get_device(&device);
+}
+
   auto options = at::TensorOptions(at::kCUDA);
 
   // initialize some cuda...
@@ -149,6 +263,17 @@ static void BM_DynamicCUDAInterfaceGetDevice(benchmark::State& state) {
 BENCHMARK(BM_DynamicCUDAInterfaceGetDevice);
 
 static void BM_DynamicCUDAInterfaceSetDevice(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+  int32_t device;
+  cudaGetDevice(&device);
+
+  at::detail::DynamicCUDAInterface::set_device(device);
+}
+
   auto options = at::TensorOptions(at::kCUDA);
 
   // initialize some cuda...
@@ -163,6 +288,16 @@ static void BM_DynamicCUDAInterfaceSetDevice(benchmark::State& state) {
 BENCHMARK(BM_DynamicCUDAInterfaceSetDevice);
 
 static void BM_StorageImplGetDevice(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+  auto* storage_impl = tmp.unsafeGetTensorImpl()->storage().unsafeGetStorageImpl();
+
+  storage_impl->device().index();
+}
+
   auto options = at::TensorOptions(at::kCUDA);
 
   // initialize some cuda...
@@ -176,6 +311,16 @@ static void BM_StorageImplGetDevice(benchmark::State& state) {
 BENCHMARK(BM_StorageImplGetDevice);
 
 static void BM_TensorImplGetDevice(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+  auto* tensor_impl = tmp.unsafeGetTensorImpl();
+
+  tensor_impl->storage().unsafeGetStorageImpl()->device().index();
+}
+
   auto options = at::TensorOptions(at::kCUDA);
 
   // initialize some cuda...
@@ -190,6 +335,15 @@ static void BM_TensorImplGetDevice(benchmark::State& state) {
 BENCHMARK(BM_TensorImplGetDevice);
 
 static void BM_TensorGetDeviceDirect(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+
+  tmp.unsafeGetTensorImpl()->storage().unsafeGetStorageImpl()->device().index();
+}
+
   auto options = at::TensorOptions(at::kCUDA);
 
   // initialize some cuda...
@@ -217,6 +371,15 @@ BENCHMARK(BM_TensorGetDeviceDirect);
 //BENCHMARK(BM_THGetDevice);
 
 static void BM_TensorGetDevice(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+
+  tmp.get_device();
+}
+
   auto options = at::TensorOptions(at::kCUDA);
 
   // initialize some cuda...
@@ -225,11 +388,22 @@ static void BM_TensorGetDevice(benchmark::State& state) {
   for (auto _ : state) {
     benchmark::DoNotOptimize(tmp.get_device());
   }
-
 }
 BENCHMARK(BM_TensorGetDevice);
 
 static void BM_DeviceGuardCtor(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+  void* mem = malloc(sizeof(at::DeviceGuard));
+
+  new (mem) at::DeviceGuard(tmp);
+
+  free(mem);
+}
+
   auto options = at::TensorOptions(at::kCUDA);
 
   // initialize some cuda...
@@ -245,6 +419,17 @@ static void BM_DeviceGuardCtor(benchmark::State& state) {
 BENCHMARK(BM_DeviceGuardCtor);
 
 static void BM_DeviceGuard(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+
+  {
+    const at::DeviceGuard guard(tmp);
+  }
+}
+
   auto options = at::TensorOptions(at::kCUDA);
 
   // initialize some cuda...
@@ -259,6 +444,17 @@ static void BM_DeviceGuard(benchmark::State& state) {
 BENCHMARK(BM_DeviceGuard);
 
 static void BM_EmptyTensorNoopResize(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCUDA);
+  std::vector<long int> sizes({0});
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+  tmp.resize_(sizes);
+  
+  tmp.resize_(sizes);
+}
+
   auto options = at::TensorOptions(at::kCUDA);
   std::vector<long int> sizes({0});
 
@@ -287,6 +483,17 @@ BENCHMARK(BM_EmptyTensorNoopResize);
 //BENCHMARK(BM_NoopEmptyResizeNoDispatch);
 
 static void BM_TensorNoopResize(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCUDA);
+  std::vector<long int> sizes({64, 2048});
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+  tmp.resize_(sizes);
+
+  tmp.resize_(sizes);
+}
+
   auto options = at::TensorOptions(at::kCUDA);
   std::vector<long int> sizes({64, 2048});
 
@@ -301,6 +508,14 @@ static void BM_TensorNoopResize(benchmark::State& state) {
 BENCHMARK(BM_TensorNoopResize);
 
 static void BM_TensorAsStrided(benchmark::State& state) {
+{
+  auto tensor = at::rand({2400});
+  std::vector<long int> strides({1, 300});
+  std::vector<long int> sizes({300, 8});
+
+  tensor.as_strided(strides, sizes);
+}
+
   auto tensor = at::rand({2400});
   std::vector<long int> strides({1, 300});
   std::vector<long int> sizes({300, 8});
@@ -311,6 +526,15 @@ static void BM_TensorAsStrided(benchmark::State& state) {
 BENCHMARK(BM_TensorAsStrided);
 
 static void BM_AtenEmptyCuda(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+
+  auto tensor = at::native::empty_cuda({0}, options);
+}
+
   auto options = at::TensorOptions(at::kCUDA);
 
   // initialize some cuda...
@@ -323,6 +547,15 @@ static void BM_AtenEmptyCuda(benchmark::State& state) {
 BENCHMARK(BM_AtenEmptyCuda);
 
 static void BM_AtenEmpty(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+
+  auto tensor = at::empty({0}, options);
+}
+
   auto options = at::TensorOptions(at::kCUDA);
 
   // initialize some cuda...
@@ -335,6 +568,15 @@ static void BM_AtenEmpty(benchmark::State& state) {
 BENCHMARK(BM_AtenEmpty);
 
 static void BM_VariableEmpty(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = torch::empty({0}, options);
+
+  auto tensor = torch::empty({0}, options);
+}
+
   auto options = at::TensorOptions(at::kCUDA);
 
   // initialize some cuda...
@@ -347,6 +589,17 @@ static void BM_VariableEmpty(benchmark::State& state) {
 BENCHMARK(BM_VariableEmpty);
 
 static void BM_AtenEmptyResize(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCUDA);
+  std::vector<long int> sizes({64, 2048});
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+  tmp.resize_(sizes);
+
+  auto tensor = at::empty({0}, options);
+  tensor.resize_(sizes);
+}
   auto options = at::TensorOptions(at::kCUDA);
   std::vector<long int> sizes({64, 2048});
 
@@ -362,6 +615,17 @@ static void BM_AtenEmptyResize(benchmark::State& state) {
 BENCHMARK(BM_AtenEmptyResize);
 
 static void BM_AtenEmptyNoResize(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCUDA);
+  std::vector<long int> sizes({64, 2048});
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+  tmp.resize_(sizes);
+
+  auto tensor = at::empty(sizes, options);
+}
+
   auto options = at::TensorOptions(at::kCUDA);
   std::vector<long int> sizes({64, 2048});
 
@@ -377,6 +641,19 @@ BENCHMARK(BM_AtenEmptyNoResize);
 
 
 static void BM_VariableEmptyResize(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCUDA);
+  std::vector<long int> sizes({64, 2048});
+  std::vector<long int> zero({0});
+
+  // initialize some cuda...
+  auto tmp = torch::empty(zero, options);
+  tmp.resize_(sizes);
+
+  auto tensor = torch::empty(zero, options);
+  tensor.resize_(sizes);
+}
+
   auto options = at::TensorOptions(at::kCUDA);
   std::vector<long int> sizes({64, 2048});
   std::vector<long int> zero({0});
@@ -393,6 +670,18 @@ static void BM_VariableEmptyResize(benchmark::State& state) {
 BENCHMARK(BM_VariableEmptyResize);
 
 static void BM_VariableEmptyNoResize(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCUDA);
+  std::vector<long int> sizes({64, 2048});
+  std::vector<long int> zero({0});
+
+  // initialize some cuda...
+  auto tmp = torch::empty(zero, options);
+  tmp.resize_(sizes);
+
+  torch::empty(sizes, options);
+}
+
   auto options = at::TensorOptions(at::kCUDA);
   std::vector<long int> sizes({64, 2048});
   std::vector<long int> zero({0});
@@ -409,6 +698,19 @@ BENCHMARK(BM_VariableEmptyNoResize);
 
 
 static void BM_MakeStorage(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = torch::empty({0}, options);
+
+  c10::make_intrusive<at::StorageImpl>(
+      at::scalarTypeToTypeMeta(options.dtype()),
+      0,
+      at::cuda::getCUDADeviceAllocator(),
+      true);
+}
+
   auto options = at::TensorOptions(at::kCUDA);
 
   // initialize some cuda...
@@ -426,6 +728,23 @@ static void BM_MakeStorage(benchmark::State& state) {
 BENCHMARK(BM_MakeStorage);
 
 static void BM_StorageCtor(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = torch::empty({0}, options);
+
+  void* mem = malloc(sizeof(at::StorageImpl));
+
+  new (mem) at::StorageImpl(
+      at::scalarTypeToTypeMeta(options.dtype()),
+      0,
+      at::cuda::getCUDADeviceAllocator(),
+      true);
+
+  free(mem);
+}
+
   auto options = at::TensorOptions(at::kCUDA);
 
   // initialize some cuda...
@@ -462,6 +781,15 @@ static void BM_StorageMalloc(benchmark::State& state) {
 BENCHMARK(BM_StorageMalloc);
 
 static void BM_ScalarTypeToTypeMeta(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = torch::empty({0}, options);
+
+  at::scalarTypeToTypeMeta(options.dtype());
+}
+
   auto options = at::TensorOptions(at::kCUDA);
 
   // initialize some cuda...
@@ -475,6 +803,21 @@ static void BM_ScalarTypeToTypeMeta(benchmark::State& state) {
 BENCHMARK(BM_ScalarTypeToTypeMeta);
 
 static void BM_MakeTensorFromStorage(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = torch::empty({0}, options);
+
+  auto storage = c10::make_intrusive<at::StorageImpl>(
+            at::scalarTypeToTypeMeta(options.dtype()),
+            0,
+            at::cuda::getCUDADeviceAllocator(),
+            true);
+
+  at::detail::make_tensor<at::TensorImpl>(storage, at::CUDATensorId(), false);
+}
+
   auto options = at::TensorOptions(at::kCUDA);
 
   // initialize some cuda...
@@ -494,6 +837,23 @@ static void BM_MakeTensorFromStorage(benchmark::State& state) {
 BENCHMARK(BM_MakeTensorFromStorage);
 
 static void BM_MakeVariableFromTensor(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = torch::empty({0}, options);
+
+  auto storage_impl = c10::make_intrusive<at::StorageImpl>(
+            at::scalarTypeToTypeMeta(options.dtype()),
+            0,
+            at::cuda::getCUDADeviceAllocator(),
+            true);
+  auto tensor = at::detail::make_tensor<at::TensorImpl>(
+      storage_impl, at::CUDATensorId(), false);
+
+  torch::autograd::make_variable(tensor, false);
+}
+
   auto options = at::TensorOptions(at::kCUDA);
 
   // initialize some cuda...
@@ -517,6 +877,15 @@ BENCHMARK(BM_MakeVariableFromTensor);
 
 
 static void BM_CheckedTensorUnwrap(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+
+  at::checked_tensor_unwrap(tmp,"self",1, false, at::Backend::CUDA, at::ScalarType::Float);
+}
+
   auto options = at::TensorOptions(at::kCUDA);
 
   // initialize some cuda...
@@ -530,4 +899,3 @@ static void BM_CheckedTensorUnwrap(benchmark::State& state) {
 BENCHMARK(BM_CheckedTensorUnwrap);
 
 BENCHMARK_MAIN();
-
