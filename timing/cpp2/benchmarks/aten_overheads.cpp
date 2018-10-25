@@ -3,6 +3,8 @@
 #include <torch/torch.h>
 #include <ATen/cuda/CUDAContext.h>
 
+static int iterations = 1;
+
 static void BM_TensorTypeId(benchmark::State& state) {
   {
   auto options = at::TensorOptions(at::kCUDA);
@@ -24,7 +26,7 @@ static void BM_TensorTypeId(benchmark::State& state) {
     tmp.unsafeGetTensorImpl()->type_id();
   }
 }
-BENCHMARK(BM_TensorTypeId);
+BENCHMARK(BM_TensorTypeId)->Iterations(iterations);
 
 static void BM_TensorType(benchmark::State& state) {
   {
@@ -47,7 +49,7 @@ static void BM_TensorType(benchmark::State& state) {
     tmp.type();
   }
 }
-BENCHMARK(BM_TensorType);
+BENCHMARK(BM_TensorType)->Iterations(iterations);
 
 static void BM_THCCachingAllocatorAllocate(benchmark::State& state) {
   {
@@ -82,7 +84,7 @@ static void BM_THCCachingAllocatorAllocate(benchmark::State& state) {
     at::DataPtr data = impl->storage().allocator()->allocate(size * 4);
   }
 }
-BENCHMARK(BM_THCCachingAllocatorAllocate);
+BENCHMARK(BM_THCCachingAllocatorAllocate)->Iterations(iterations);
 
 
 
@@ -105,7 +107,7 @@ static void BM_TensorIsCuda(benchmark::State& state) {
     benchmark::DoNotOptimize(tmp.is_cuda());
   }
 }
-BENCHMARK(BM_TensorIsCuda);
+BENCHMARK(BM_TensorIsCuda)->Iterations(iterations);
 
 static void BM_TensorDim(benchmark::State& state) {
   {
@@ -126,7 +128,7 @@ static void BM_TensorDim(benchmark::State& state) {
     benchmark::DoNotOptimize(tmp.dim());
   }
 }
-BENCHMARK(BM_TensorDim);
+BENCHMARK(BM_TensorDim)->Iterations(iterations);
 
 static void BM_TensorIsSparse(benchmark::State& state) {
   {
@@ -147,7 +149,7 @@ static void BM_TensorIsSparse(benchmark::State& state) {
     benchmark::DoNotOptimize(tmp.is_sparse());
   }
 }
-BENCHMARK(BM_TensorIsSparse);
+BENCHMARK(BM_TensorIsSparse)->Iterations(iterations);
 
 static void BM_TensorTypeIsCuda(benchmark::State& state) {
 {
@@ -168,7 +170,7 @@ static void BM_TensorTypeIsCuda(benchmark::State& state) {
     benchmark::DoNotOptimize(tmp.type().is_cuda());
   }
 }
-BENCHMARK(BM_TensorTypeIsCuda);
+BENCHMARK(BM_TensorTypeIsCuda)->Iterations(iterations);
 
 static void BM_TensorNumel(benchmark::State& state) {
 {
@@ -189,7 +191,7 @@ static void BM_TensorNumel(benchmark::State& state) {
     benchmark::DoNotOptimize(tmp.numel());
   }
 }
-BENCHMARK(BM_TensorNumel);
+BENCHMARK(BM_TensorNumel)->Iterations(iterations);
 
 static void BM_CudaAPIGetDevice(benchmark::State& state) {
 {
@@ -212,7 +214,7 @@ static void BM_CudaAPIGetDevice(benchmark::State& state) {
     benchmark::DoNotOptimize(cudaGetDevice(&device));
   }
 }
-BENCHMARK(BM_CudaAPIGetDevice);
+BENCHMARK(BM_CudaAPIGetDevice)->Iterations(iterations);
 
 static void BM_CudaAPISetDevice(benchmark::State& state) {
 {
@@ -237,7 +239,7 @@ static void BM_CudaAPISetDevice(benchmark::State& state) {
     benchmark::DoNotOptimize(cudaSetDevice(device));
   }
 }
-BENCHMARK(BM_CudaAPISetDevice);
+BENCHMARK(BM_CudaAPISetDevice)->Iterations(iterations);
 
 static void BM_DynamicCUDAInterfaceGetDevice(benchmark::State& state) {
 {
@@ -260,7 +262,7 @@ static void BM_DynamicCUDAInterfaceGetDevice(benchmark::State& state) {
     at::detail::DynamicCUDAInterface::get_device(&device);
   }
 }
-BENCHMARK(BM_DynamicCUDAInterfaceGetDevice);
+BENCHMARK(BM_DynamicCUDAInterfaceGetDevice)->Iterations(iterations);
 
 static void BM_DynamicCUDAInterfaceSetDevice(benchmark::State& state) {
 {
@@ -285,7 +287,7 @@ static void BM_DynamicCUDAInterfaceSetDevice(benchmark::State& state) {
     at::detail::DynamicCUDAInterface::set_device(device);
   }
 }
-BENCHMARK(BM_DynamicCUDAInterfaceSetDevice);
+BENCHMARK(BM_DynamicCUDAInterfaceSetDevice)->Iterations(iterations);
 
 static void BM_StorageImplGetDevice(benchmark::State& state) {
 {
@@ -308,7 +310,7 @@ static void BM_StorageImplGetDevice(benchmark::State& state) {
     benchmark::DoNotOptimize(storage_impl->device().index());
   }
 }
-BENCHMARK(BM_StorageImplGetDevice);
+BENCHMARK(BM_StorageImplGetDevice)->Iterations(iterations);
 
 static void BM_TensorImplGetDevice(benchmark::State& state) {
 {
@@ -332,7 +334,7 @@ static void BM_TensorImplGetDevice(benchmark::State& state) {
         tensor_impl->storage().unsafeGetStorageImpl()->device().index());
   }
 }
-BENCHMARK(BM_TensorImplGetDevice);
+BENCHMARK(BM_TensorImplGetDevice)->Iterations(iterations);
 
 static void BM_TensorGetDeviceDirect(benchmark::State& state) {
 {
@@ -354,7 +356,7 @@ static void BM_TensorGetDeviceDirect(benchmark::State& state) {
         tmp.unsafeGetTensorImpl()->storage().unsafeGetStorageImpl()->device().index());
   }
 }
-BENCHMARK(BM_TensorGetDeviceDirect);
+BENCHMARK(BM_TensorGetDeviceDirect)->Iterations(iterations);
 
 
 //static void BM_THGetDevice(benchmark::State& state) {
@@ -368,7 +370,7 @@ BENCHMARK(BM_TensorGetDeviceDirect);
 //  }
 //
 //}
-//BENCHMARK(BM_THGetDevice);
+//BENCHMARK(BM_THGetDevice)->Iterations(iterations);
 
 static void BM_TensorGetDevice(benchmark::State& state) {
 {
@@ -389,7 +391,7 @@ static void BM_TensorGetDevice(benchmark::State& state) {
     benchmark::DoNotOptimize(tmp.get_device());
   }
 }
-BENCHMARK(BM_TensorGetDevice);
+BENCHMARK(BM_TensorGetDevice)->Iterations(iterations);
 
 static void BM_DeviceGuardCtor(benchmark::State& state) {
 {
@@ -416,7 +418,7 @@ static void BM_DeviceGuardCtor(benchmark::State& state) {
 
   free(mem);
 }
-BENCHMARK(BM_DeviceGuardCtor);
+BENCHMARK(BM_DeviceGuardCtor)->Iterations(iterations);
 
 static void BM_DeviceGuard(benchmark::State& state) {
 {
@@ -441,7 +443,7 @@ static void BM_DeviceGuard(benchmark::State& state) {
     }
   }
 }
-BENCHMARK(BM_DeviceGuard);
+BENCHMARK(BM_DeviceGuard)->Iterations(iterations);
 
 static void BM_EmptyTensorNoopResize(benchmark::State& state) {
 {
@@ -466,7 +468,7 @@ static void BM_EmptyTensorNoopResize(benchmark::State& state) {
     tmp.resize_(sizes);
   }
 }
-BENCHMARK(BM_EmptyTensorNoopResize);
+BENCHMARK(BM_EmptyTensorNoopResize)->Iterations(iterations);
 
 //static void BM_NoopEmptyResizeNoDispatch(benchmark::State& state) {
 //  auto options = at::TensorOptions(at::kCUDA);
@@ -480,7 +482,7 @@ BENCHMARK(BM_EmptyTensorNoopResize);
 //    at::native::resize__cuda(tmp, sizes);
 //  }
 //}
-//BENCHMARK(BM_NoopEmptyResizeNoDispatch);
+//BENCHMARK(BM_NoopEmptyResizeNoDispatch)->Iterations(iterations);
 
 static void BM_TensorNoopResize(benchmark::State& state) {
 {
@@ -505,7 +507,7 @@ static void BM_TensorNoopResize(benchmark::State& state) {
     tmp.resize_(sizes);
   }
 }
-BENCHMARK(BM_TensorNoopResize);
+BENCHMARK(BM_TensorNoopResize)->Iterations(iterations);
 
 static void BM_TensorAsStrided(benchmark::State& state) {
 {
@@ -523,7 +525,7 @@ static void BM_TensorAsStrided(benchmark::State& state) {
   for (auto _ : state)
     benchmark::DoNotOptimize(tensor.as_strided(strides, sizes));
 }
-BENCHMARK(BM_TensorAsStrided);
+BENCHMARK(BM_TensorAsStrided)->Iterations(iterations);
 
 static void BM_AtenEmptyCuda(benchmark::State& state) {
 {
@@ -544,7 +546,7 @@ static void BM_AtenEmptyCuda(benchmark::State& state) {
     auto tensor = at::native::empty_cuda({0}, options);
   }
 }
-BENCHMARK(BM_AtenEmptyCuda);
+BENCHMARK(BM_AtenEmptyCuda)->Iterations(iterations);
 
 static void BM_AtenEmpty(benchmark::State& state) {
 {
@@ -565,7 +567,7 @@ static void BM_AtenEmpty(benchmark::State& state) {
     auto tensor = at::empty({0}, options);
   }
 }
-BENCHMARK(BM_AtenEmpty);
+BENCHMARK(BM_AtenEmpty)->Iterations(iterations);
 
 static void BM_VariableEmpty(benchmark::State& state) {
 {
@@ -586,7 +588,7 @@ static void BM_VariableEmpty(benchmark::State& state) {
     auto tensor = torch::empty({0}, options);
   }
 }
-BENCHMARK(BM_VariableEmpty);
+BENCHMARK(BM_VariableEmpty)->Iterations(iterations);
 
 static void BM_AtenEmptyResize(benchmark::State& state) {
 {
@@ -612,7 +614,7 @@ static void BM_AtenEmptyResize(benchmark::State& state) {
     tensor.resize_(sizes);
   }
 }
-BENCHMARK(BM_AtenEmptyResize);
+BENCHMARK(BM_AtenEmptyResize)->Iterations(iterations);
 
 static void BM_AtenEmptyNoResize(benchmark::State& state) {
 {
@@ -637,7 +639,7 @@ static void BM_AtenEmptyNoResize(benchmark::State& state) {
     auto tensor = at::empty(sizes, options);
   }
 }
-BENCHMARK(BM_AtenEmptyNoResize);
+BENCHMARK(BM_AtenEmptyNoResize)->Iterations(iterations);
 
 
 static void BM_VariableEmptyResize(benchmark::State& state) {
@@ -667,7 +669,7 @@ static void BM_VariableEmptyResize(benchmark::State& state) {
     tensor.resize_(sizes);
   }
 }
-BENCHMARK(BM_VariableEmptyResize);
+BENCHMARK(BM_VariableEmptyResize)->Iterations(iterations);
 
 static void BM_VariableEmptyNoResize(benchmark::State& state) {
 {
@@ -694,7 +696,7 @@ static void BM_VariableEmptyNoResize(benchmark::State& state) {
     benchmark::DoNotOptimize(torch::empty(sizes, options));
   }
 }
-BENCHMARK(BM_VariableEmptyNoResize);
+BENCHMARK(BM_VariableEmptyNoResize)->Iterations(iterations);
 
 
 static void BM_MakeStorage(benchmark::State& state) {
@@ -725,7 +727,7 @@ static void BM_MakeStorage(benchmark::State& state) {
             true));
   }
 }
-BENCHMARK(BM_MakeStorage);
+BENCHMARK(BM_MakeStorage)->Iterations(iterations);
 
 static void BM_StorageCtor(benchmark::State& state) {
 {
@@ -763,14 +765,14 @@ static void BM_StorageCtor(benchmark::State& state) {
 
   free(mem);
 }
-BENCHMARK(BM_StorageCtor);
+BENCHMARK(BM_StorageCtor)->Iterations(iterations);
 
 static void BM_MallocOverhead(benchmark::State& state) {
   for (auto _ : state) {
     benchmark::DoNotOptimize(malloc(1));
   }
 }
-BENCHMARK(BM_MallocOverhead);
+BENCHMARK(BM_MallocOverhead)->Iterations(iterations);
 
 static void BM_StorageMalloc(benchmark::State& state) {
   for (auto _ : state) {
@@ -778,7 +780,7 @@ static void BM_StorageMalloc(benchmark::State& state) {
     benchmark::DoNotOptimize(malloc(sizeof(at::StorageImpl)));
   }
 }
-BENCHMARK(BM_StorageMalloc);
+BENCHMARK(BM_StorageMalloc)->Iterations(iterations);
 
 static void BM_ScalarTypeToTypeMeta(benchmark::State& state) {
 {
@@ -800,7 +802,7 @@ static void BM_ScalarTypeToTypeMeta(benchmark::State& state) {
         at::scalarTypeToTypeMeta(options.dtype()));
   }
 }
-BENCHMARK(BM_ScalarTypeToTypeMeta);
+BENCHMARK(BM_ScalarTypeToTypeMeta)->Iterations(iterations);
 
 static void BM_MakeTensorFromStorage(benchmark::State& state) {
 {
@@ -834,7 +836,7 @@ static void BM_MakeTensorFromStorage(benchmark::State& state) {
         at::detail::make_tensor<at::TensorImpl>(storage, at::CUDATensorId(), false));
   }
 }
-BENCHMARK(BM_MakeTensorFromStorage);
+BENCHMARK(BM_MakeTensorFromStorage)->Iterations(iterations);
 
 static void BM_MakeVariableFromTensor(benchmark::State& state) {
 {
@@ -872,7 +874,7 @@ static void BM_MakeVariableFromTensor(benchmark::State& state) {
         torch::autograd::make_variable(tensor, false));
   }
 }
-BENCHMARK(BM_MakeVariableFromTensor);
+BENCHMARK(BM_MakeVariableFromTensor)->Iterations(iterations);
 
 
 
@@ -896,6 +898,6 @@ static void BM_CheckedTensorUnwrap(benchmark::State& state) {
         at::checked_tensor_unwrap(tmp,"self",1, false, at::Backend::CUDA, at::ScalarType::Float));
   }
 }
-BENCHMARK(BM_CheckedTensorUnwrap);
+BENCHMARK(BM_CheckedTensorUnwrap)->Iterations(iterations);
 
 BENCHMARK_MAIN();
