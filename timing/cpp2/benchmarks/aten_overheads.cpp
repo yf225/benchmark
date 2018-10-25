@@ -194,10 +194,10 @@ static void BM_TensorNumel(benchmark::State& state) {
   auto tmp = at::empty({0}, options);
 
   std::cout << "Dry run started!\n";
-  FLAGS_vfunc_call_count = 0;
+  at::TensorImpl::set_vfunc_call_count(0);
   tmp.numel();
   std::cout << "Dry run is done!\n";
-  std::cout << "vfunc_call_count: " << FLAGS_vfunc_call_count << "\n";
+  std::cout << "vfunc_call_count: " << at::TensorImpl::get_vfunc_call_count() << "\n";
 }
 
   auto options = at::TensorOptions(at::kCPU);
@@ -558,10 +558,10 @@ static void BM_TensorAsStrided(benchmark::State& state) {
   std::vector<long int> sizes({300, 8});
 
   std::cout << "Dry run started!\n";
-  FLAGS_vfunc_call_count = 0;
+  at::TensorImpl::set_vfunc_call_count(0);
   tensor.as_strided(strides, sizes);
   std::cout << "Dry run is done!\n";
-  std::cout << "vfunc_call_count: " << FLAGS_vfunc_call_count << "\n";
+  std::cout << "vfunc_call_count: " << at::TensorImpl::get_vfunc_call_count() << "\n";
 }
 
   auto tensor = at::rand({2400});
@@ -652,11 +652,11 @@ static void BM_AtenEmptyResize(benchmark::State& state) {
   tmp.resize_(sizes);
 
   std::cout << "Dry run started!\n";
-  FLAGS_vfunc_call_count = 0;
+  at::TensorImpl::set_vfunc_call_count(0);
   auto tensor = at::empty({0}, options);
   tensor.resize_(sizes);
   std::cout << "Dry run is done!\n";
-  std::cout << "vfunc_call_count: " << FLAGS_vfunc_call_count << "\n";
+  std::cout << "vfunc_call_count: " << at::TensorImpl::get_vfunc_call_count() << "\n";
 }
   auto options = at::TensorOptions(at::kCPU);
   std::vector<long int> sizes({64, 2048});
@@ -682,10 +682,10 @@ static void BM_AtenEmptyNoResize(benchmark::State& state) {
   tmp.resize_(sizes);
 
   std::cout << "Dry run started!\n";
-  FLAGS_vfunc_call_count = 0;
+  at::TensorImpl::set_vfunc_call_count(0);
   auto tensor = at::empty(sizes, options);
   std::cout << "Dry run is done!\n";
-  std::cout << "vfunc_call_count: " << FLAGS_vfunc_call_count << "\n";
+  std::cout << "vfunc_call_count: " << at::TensorImpl::get_vfunc_call_count() << "\n";
 }
 
   auto options = at::TensorOptions(at::kCPU);
@@ -713,11 +713,11 @@ static void BM_VariableEmptyResize(benchmark::State& state) {
   tmp.resize_(sizes);
 
   std::cout << "Dry run started!\n";
-  FLAGS_vfunc_call_count = 0;
+  at::TensorImpl::set_vfunc_call_count(0);
   auto tensor = torch::empty(zero, options);
   tensor.resize_(sizes);
   std::cout << "Dry run is done!\n";
-  std::cout << "vfunc_call_count: " << FLAGS_vfunc_call_count << "\n";
+  std::cout << "vfunc_call_count: " << at::TensorImpl::get_vfunc_call_count() << "\n";
 }
 
   auto options = at::TensorOptions(at::kCPU);
@@ -746,10 +746,10 @@ static void BM_VariableEmptyNoResize(benchmark::State& state) {
   tmp.resize_(sizes);
 
   std::cout << "Dry run started!\n";
-  FLAGS_vfunc_call_count = 0;
+  at::TensorImpl::set_vfunc_call_count(0);
   auto tensor = torch::empty(sizes, options);
   std::cout << "Dry run is done!\n";
-  std::cout << "vfunc_call_count: " << FLAGS_vfunc_call_count << "\n";
+  std::cout << "vfunc_call_count: " << at::TensorImpl::get_vfunc_call_count() << "\n";
 }
 
   auto options = at::TensorOptions(at::kCPU);
@@ -774,10 +774,10 @@ static void BM_VariableNumel(benchmark::State& state) {
   auto tmp = torch::empty({0}, options);
 
   std::cout << "Dry run started!\n";
-  FLAGS_vfunc_call_count = 0;
+  at::TensorImpl::set_vfunc_call_count(0);
   tmp.numel();
   std::cout << "Dry run is done!\n";
-  std::cout << "vfunc_call_count: " << FLAGS_vfunc_call_count << "\n";
+  std::cout << "vfunc_call_count: " << at::TensorImpl::get_vfunc_call_count() << "\n";
 }
 
   auto options = at::TensorOptions(at::kCPU);
@@ -799,10 +799,10 @@ static void BM_VariableSize(benchmark::State& state) {
   auto tmp = torch::empty({0}, options);
 
   std::cout << "Dry run started!\n";
-  FLAGS_vfunc_call_count = 0;
+  at::TensorImpl::set_vfunc_call_count(0);
   tmp.size(0);
   std::cout << "Dry run is done!\n";
-  std::cout << "vfunc_call_count: " << FLAGS_vfunc_call_count << "\n";
+  std::cout << "vfunc_call_count: " << at::TensorImpl::get_vfunc_call_count() << "\n";
 }
 
   auto options = at::TensorOptions(at::kCPU);
@@ -824,10 +824,10 @@ static void BM_VariableDim(benchmark::State& state) {
   auto tmp = torch::empty({0}, options);
 
   std::cout << "Dry run started!\n";
-  FLAGS_vfunc_call_count = 0;
+  at::TensorImpl::set_vfunc_call_count(0);
   tmp.dim();
   std::cout << "Dry run is done!\n";
-  std::cout << "vfunc_call_count: " << FLAGS_vfunc_call_count << "\n";
+  std::cout << "vfunc_call_count: " << at::TensorImpl::get_vfunc_call_count() << "\n";
 }
 
   auto options = at::TensorOptions(at::kCPU);
