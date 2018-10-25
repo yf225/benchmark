@@ -642,7 +642,7 @@ BENCHMARK(BM_VariableEmpty)->Iterations(iterations);
 
 static void BM_AtenEmptyResize(benchmark::State& state) {
 {
-  auto options = at::TensorOptions(at::kCUDA);
+  auto options = at::TensorOptions(at::kCPU);
   std::vector<long int> sizes({64, 2048});
 
   // initialize some cuda...
@@ -656,7 +656,7 @@ static void BM_AtenEmptyResize(benchmark::State& state) {
   std::cout << "Dry run is done!\n";
   std::cout << "vfunc_call_count: " << FLAGS_vfunc_call_count << "\n";
 }
-  auto options = at::TensorOptions(at::kCUDA);
+  auto options = at::TensorOptions(at::kCPU);
   std::vector<long int> sizes({64, 2048});
 
   // initialize some cuda...
@@ -672,7 +672,7 @@ BENCHMARK(BM_AtenEmptyResize)->Iterations(iterations);
 
 static void BM_AtenEmptyNoResize(benchmark::State& state) {
 {
-  auto options = at::TensorOptions(at::kCUDA);
+  auto options = at::TensorOptions(at::kCPU);
   std::vector<long int> sizes({64, 2048});
 
   // initialize some cuda...
@@ -686,7 +686,7 @@ static void BM_AtenEmptyNoResize(benchmark::State& state) {
   std::cout << "vfunc_call_count: " << FLAGS_vfunc_call_count << "\n";
 }
 
-  auto options = at::TensorOptions(at::kCUDA);
+  auto options = at::TensorOptions(at::kCPU);
   std::vector<long int> sizes({64, 2048});
 
   // initialize some cuda...
@@ -702,7 +702,7 @@ BENCHMARK(BM_AtenEmptyNoResize)->Iterations(iterations);
 
 static void BM_VariableEmptyResize(benchmark::State& state) {
 {
-  auto options = at::TensorOptions(at::kCUDA);
+  auto options = at::TensorOptions(at::kCPU);
   std::vector<long int> sizes({64, 2048});
   std::vector<long int> zero({0});
 
@@ -718,7 +718,7 @@ static void BM_VariableEmptyResize(benchmark::State& state) {
   std::cout << "vfunc_call_count: " << FLAGS_vfunc_call_count << "\n";
 }
 
-  auto options = at::TensorOptions(at::kCUDA);
+  auto options = at::TensorOptions(at::kCPU);
   std::vector<long int> sizes({64, 2048});
   std::vector<long int> zero({0});
 
@@ -735,7 +735,7 @@ BENCHMARK(BM_VariableEmptyResize)->Iterations(iterations);
 
 static void BM_VariableEmptyNoResize(benchmark::State& state) {
 {
-  auto options = at::TensorOptions(at::kCUDA);
+  auto options = at::TensorOptions(at::kCPU);
   std::vector<long int> sizes({64, 2048});
   std::vector<long int> zero({0});
 
@@ -750,7 +750,7 @@ static void BM_VariableEmptyNoResize(benchmark::State& state) {
   std::cout << "vfunc_call_count: " << FLAGS_vfunc_call_count << "\n";
 }
 
-  auto options = at::TensorOptions(at::kCUDA);
+  auto options = at::TensorOptions(at::kCPU);
   std::vector<long int> sizes({64, 2048});
   std::vector<long int> zero({0});
 
