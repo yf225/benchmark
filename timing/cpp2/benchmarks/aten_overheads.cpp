@@ -6,7 +6,7 @@
 static int iterations = 1;
 
 static void BM_TensorTypeId(benchmark::State& state) {
-  {
+{
   auto options = at::TensorOptions(at::kCUDA);
   std::vector<long int> sizes({64, 2048});
 
@@ -14,7 +14,9 @@ static void BM_TensorTypeId(benchmark::State& state) {
   auto tmp = at::empty({0}, options);
 
   tmp.unsafeGetTensorImpl()->type_id();
-  }
+
+  std::cout << "Dry run is done!\n";
+}
 
   auto options = at::TensorOptions(at::kCUDA);
   std::vector<long int> sizes({64, 2048});
@@ -29,7 +31,7 @@ static void BM_TensorTypeId(benchmark::State& state) {
 BENCHMARK(BM_TensorTypeId)->Iterations(iterations);
 
 static void BM_TensorType(benchmark::State& state) {
-  {
+{
   auto options = at::TensorOptions(at::kCUDA);
   std::vector<long int> sizes({64, 2048});
 
@@ -37,7 +39,8 @@ static void BM_TensorType(benchmark::State& state) {
   auto tmp = at::empty({0}, options);
 
   tmp.type();
-  }
+  std::cout << "Dry run is done!\n";
+}
 
   auto options = at::TensorOptions(at::kCUDA);
   std::vector<long int> sizes({64, 2048});
@@ -52,7 +55,7 @@ static void BM_TensorType(benchmark::State& state) {
 BENCHMARK(BM_TensorType)->Iterations(iterations);
 
 static void BM_THCCachingAllocatorAllocate(benchmark::State& state) {
-  {
+{
   auto options = at::TensorOptions(at::kCUDA);
 
   // initialize some cuda...
@@ -66,7 +69,8 @@ static void BM_THCCachingAllocatorAllocate(benchmark::State& state) {
   }
 
   at::DataPtr data = impl->storage().allocator()->allocate(size * 4);
-  }
+  std::cout << "Dry run is done!\n";
+}
 
   auto options = at::TensorOptions(at::kCUDA);
 
@@ -89,14 +93,15 @@ BENCHMARK(BM_THCCachingAllocatorAllocate)->Iterations(iterations);
 
 
 static void BM_TensorIsCuda(benchmark::State& state) {
-  {
+{
   auto options = at::TensorOptions(at::kCUDA);
 
   // initialize some cuda...
   auto tmp = at::empty({0}, options);
 
   tmp.is_cuda();
-  }
+  std::cout << "Dry run is done!\n";
+}
 
   auto options = at::TensorOptions(at::kCUDA);
 
@@ -110,14 +115,15 @@ static void BM_TensorIsCuda(benchmark::State& state) {
 BENCHMARK(BM_TensorIsCuda)->Iterations(iterations);
 
 static void BM_TensorDim(benchmark::State& state) {
-  {
+{
   auto options = at::TensorOptions(at::kCUDA);
 
   // initialize some cuda...
   auto tmp = at::empty({0}, options);
 
   tmp.dim();
-  }
+  std::cout << "Dry run is done!\n";
+}
 
   auto options = at::TensorOptions(at::kCUDA);
 
@@ -131,14 +137,15 @@ static void BM_TensorDim(benchmark::State& state) {
 BENCHMARK(BM_TensorDim)->Iterations(iterations);
 
 static void BM_TensorIsSparse(benchmark::State& state) {
-  {
+{
   auto options = at::TensorOptions(at::kCUDA);
 
   // initialize some cuda...
   auto tmp = at::empty({0}, options);
 
   tmp.is_sparse();
-  }
+  std::cout << "Dry run is done!\n";
+}
 
   auto options = at::TensorOptions(at::kCUDA);
 
@@ -159,6 +166,7 @@ static void BM_TensorTypeIsCuda(benchmark::State& state) {
   auto tmp = at::empty({0}, options);
 
   tmp.type().is_cuda();
+  std::cout << "Dry run is done!\n";
 }
 
   auto options = at::TensorOptions(at::kCUDA);
@@ -180,6 +188,7 @@ static void BM_TensorNumel(benchmark::State& state) {
   auto tmp = at::empty({0}, options);
 
   tmp.numel();
+  std::cout << "Dry run is done!\n";
 }
 
   auto options = at::TensorOptions(at::kCUDA);
@@ -202,6 +211,7 @@ static void BM_CudaAPIGetDevice(benchmark::State& state) {
   int32_t device;
 
   cudaGetDevice(&device);
+  std::cout << "Dry run is done!\n";
 }
 
   auto options = at::TensorOptions(at::kCUDA);
@@ -226,6 +236,7 @@ static void BM_CudaAPISetDevice(benchmark::State& state) {
   cudaGetDevice(&device);
 
   cudaSetDevice(device);
+  std::cout << "Dry run is done!\n";
 }
 
   auto options = at::TensorOptions(at::kCUDA);
@@ -250,6 +261,7 @@ static void BM_DynamicCUDAInterfaceGetDevice(benchmark::State& state) {
   int32_t device;
 
   at::detail::DynamicCUDAInterface::get_device(&device);
+  std::cout << "Dry run is done!\n";
 }
 
   auto options = at::TensorOptions(at::kCUDA);
@@ -274,6 +286,7 @@ static void BM_DynamicCUDAInterfaceSetDevice(benchmark::State& state) {
   cudaGetDevice(&device);
 
   at::detail::DynamicCUDAInterface::set_device(device);
+  std::cout << "Dry run is done!\n";
 }
 
   auto options = at::TensorOptions(at::kCUDA);
@@ -298,6 +311,7 @@ static void BM_StorageImplGetDevice(benchmark::State& state) {
   auto* storage_impl = tmp.unsafeGetTensorImpl()->storage().unsafeGetStorageImpl();
 
   storage_impl->device().index();
+  std::cout << "Dry run is done!\n";
 }
 
   auto options = at::TensorOptions(at::kCUDA);
@@ -321,6 +335,7 @@ static void BM_TensorImplGetDevice(benchmark::State& state) {
   auto* tensor_impl = tmp.unsafeGetTensorImpl();
 
   tensor_impl->storage().unsafeGetStorageImpl()->device().index();
+  std::cout << "Dry run is done!\n";
 }
 
   auto options = at::TensorOptions(at::kCUDA);
@@ -344,6 +359,7 @@ static void BM_TensorGetDeviceDirect(benchmark::State& state) {
   auto tmp = at::empty({0}, options);
 
   tmp.unsafeGetTensorImpl()->storage().unsafeGetStorageImpl()->device().index();
+  std::cout << "Dry run is done!\n";
 }
 
   auto options = at::TensorOptions(at::kCUDA);
@@ -380,6 +396,7 @@ static void BM_TensorGetDevice(benchmark::State& state) {
   auto tmp = at::empty({0}, options);
 
   tmp.get_device();
+  std::cout << "Dry run is done!\n";
 }
 
   auto options = at::TensorOptions(at::kCUDA);
@@ -404,6 +421,7 @@ static void BM_DeviceGuardCtor(benchmark::State& state) {
   new (mem) at::DeviceGuard(tmp);
 
   free(mem);
+  std::cout << "Dry run is done!\n";
 }
 
   auto options = at::TensorOptions(at::kCUDA);
@@ -430,6 +448,7 @@ static void BM_DeviceGuard(benchmark::State& state) {
   {
     const at::DeviceGuard guard(tmp);
   }
+  std::cout << "Dry run is done!\n";
 }
 
   auto options = at::TensorOptions(at::kCUDA);
@@ -455,6 +474,7 @@ static void BM_EmptyTensorNoopResize(benchmark::State& state) {
   tmp.resize_(sizes);
   
   tmp.resize_(sizes);
+  std::cout << "Dry run is done!\n";
 }
 
   auto options = at::TensorOptions(at::kCUDA);
@@ -494,6 +514,7 @@ static void BM_TensorNoopResize(benchmark::State& state) {
   tmp.resize_(sizes);
 
   tmp.resize_(sizes);
+  std::cout << "Dry run is done!\n";
 }
 
   auto options = at::TensorOptions(at::kCUDA);
@@ -516,6 +537,7 @@ static void BM_TensorAsStrided(benchmark::State& state) {
   std::vector<long int> sizes({300, 8});
 
   tensor.as_strided(strides, sizes);
+  std::cout << "Dry run is done!\n";
 }
 
   auto tensor = at::rand({2400});
@@ -535,6 +557,7 @@ static void BM_AtenEmptyCuda(benchmark::State& state) {
   auto tmp = at::empty({0}, options);
 
   auto tensor = at::native::empty_cuda({0}, options);
+  std::cout << "Dry run is done!\n";
 }
 
   auto options = at::TensorOptions(at::kCUDA);
@@ -556,6 +579,7 @@ static void BM_AtenEmpty(benchmark::State& state) {
   auto tmp = at::empty({0}, options);
 
   auto tensor = at::empty({0}, options);
+  std::cout << "Dry run is done!\n";
 }
 
   auto options = at::TensorOptions(at::kCUDA);
@@ -577,6 +601,7 @@ static void BM_VariableEmpty(benchmark::State& state) {
   auto tmp = torch::empty({0}, options);
 
   auto tensor = torch::empty({0}, options);
+  std::cout << "Dry run is done!\n";
 }
 
   auto options = at::TensorOptions(at::kCUDA);
@@ -601,6 +626,7 @@ static void BM_AtenEmptyResize(benchmark::State& state) {
 
   auto tensor = at::empty({0}, options);
   tensor.resize_(sizes);
+  std::cout << "Dry run is done!\n";
 }
   auto options = at::TensorOptions(at::kCUDA);
   std::vector<long int> sizes({64, 2048});
@@ -626,6 +652,7 @@ static void BM_AtenEmptyNoResize(benchmark::State& state) {
   tmp.resize_(sizes);
 
   auto tensor = at::empty(sizes, options);
+  std::cout << "Dry run is done!\n";
 }
 
   auto options = at::TensorOptions(at::kCUDA);
@@ -654,6 +681,7 @@ static void BM_VariableEmptyResize(benchmark::State& state) {
 
   auto tensor = torch::empty(zero, options);
   tensor.resize_(sizes);
+  std::cout << "Dry run is done!\n";
 }
 
   auto options = at::TensorOptions(at::kCUDA);
@@ -682,6 +710,7 @@ static void BM_VariableEmptyNoResize(benchmark::State& state) {
   tmp.resize_(sizes);
 
   torch::empty(sizes, options);
+  std::cout << "Dry run is done!\n";
 }
 
   auto options = at::TensorOptions(at::kCUDA);
@@ -711,6 +740,7 @@ static void BM_MakeStorage(benchmark::State& state) {
       0,
       at::cuda::getCUDADeviceAllocator(),
       true);
+  std::cout << "Dry run is done!\n";
 }
 
   auto options = at::TensorOptions(at::kCUDA);
@@ -745,6 +775,7 @@ static void BM_StorageCtor(benchmark::State& state) {
       true);
 
   free(mem);
+  std::cout << "Dry run is done!\n";
 }
 
   auto options = at::TensorOptions(at::kCUDA);
@@ -790,6 +821,7 @@ static void BM_ScalarTypeToTypeMeta(benchmark::State& state) {
   auto tmp = torch::empty({0}, options);
 
   at::scalarTypeToTypeMeta(options.dtype());
+  std::cout << "Dry run is done!\n";
 }
 
   auto options = at::TensorOptions(at::kCUDA);
@@ -818,6 +850,7 @@ static void BM_MakeTensorFromStorage(benchmark::State& state) {
             true);
 
   at::detail::make_tensor<at::TensorImpl>(storage, at::CUDATensorId(), false);
+  std::cout << "Dry run is done!\n";
 }
 
   auto options = at::TensorOptions(at::kCUDA);
@@ -854,6 +887,7 @@ static void BM_MakeVariableFromTensor(benchmark::State& state) {
       storage_impl, at::CUDATensorId(), false);
 
   torch::autograd::make_variable(tensor, false);
+  std::cout << "Dry run is done!\n";
 }
 
   auto options = at::TensorOptions(at::kCUDA);
@@ -886,6 +920,7 @@ static void BM_CheckedTensorUnwrap(benchmark::State& state) {
   auto tmp = at::empty({0}, options);
 
   at::checked_tensor_unwrap(tmp,"self",1, false, at::Backend::CUDA, at::ScalarType::Float);
+  std::cout << "Dry run is done!\n";
 }
 
   auto options = at::TensorOptions(at::kCUDA);
