@@ -188,17 +188,19 @@ BENCHMARK(BM_TensorTypeIsCuda)->Iterations(iterations);
 
 static void BM_TensorNumel(benchmark::State& state) {
 {
-  auto options = at::TensorOptions(at::kCUDA);
+  auto options = at::TensorOptions(at::kCPU);
 
   // initialize some cuda...
   auto tmp = at::empty({0}, options);
 
   std::cout << "Dry run started!\n";
+  FLAGS_vfunc_call_count = 0;
   tmp.numel();
   std::cout << "Dry run is done!\n";
+  std::cout << "vfunc_call_count: " << FLAGS_vfunc_call_count << "\n";
 }
 
-  auto options = at::TensorOptions(at::kCUDA);
+  auto options = at::TensorOptions(at::kCPU);
 
   // initialize some cuda...
   auto tmp = at::empty({0}, options);
