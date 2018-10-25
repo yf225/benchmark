@@ -766,6 +766,80 @@ static void BM_VariableEmptyNoResize(benchmark::State& state) {
 }
 BENCHMARK(BM_VariableEmptyNoResize)->Iterations(iterations);
 
+static void BM_VariableNumel(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCPU);
+
+  // initialize some cuda...
+  auto tmp = torch::empty({0}, options);
+
+  std::cout << "Dry run started!\n";
+  FLAGS_vfunc_call_count = 0;
+  tmp.numel();
+  std::cout << "Dry run is done!\n";
+  std::cout << "vfunc_call_count: " << FLAGS_vfunc_call_count << "\n";
+}
+
+  auto options = at::TensorOptions(at::kCPU);
+
+  // initialize some cuda...
+  auto tmp = torch::empty({0}, options);
+
+  for (auto _ : state) {
+    benchmark::DoNotOptimize(tmp.numel());
+  }
+}
+BENCHMARK(BM_VariableNumel)->Iterations(iterations);
+
+static void BM_VariableSize(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCPU);
+
+  // initialize some cuda...
+  auto tmp = torch::empty({0}, options);
+
+  std::cout << "Dry run started!\n";
+  FLAGS_vfunc_call_count = 0;
+  tmp.size(0);
+  std::cout << "Dry run is done!\n";
+  std::cout << "vfunc_call_count: " << FLAGS_vfunc_call_count << "\n";
+}
+
+  auto options = at::TensorOptions(at::kCPU);
+
+  // initialize some cuda...
+  auto tmp = torch::empty({0}, options);
+
+  for (auto _ : state) {
+    benchmark::DoNotOptimize(tmp.size(0));
+  }
+}
+BENCHMARK(BM_VariableSize)->Iterations(iterations);
+
+static void BM_VariableDim(benchmark::State& state) {
+{
+  auto options = at::TensorOptions(at::kCPU);
+
+  // initialize some cuda...
+  auto tmp = torch::empty({0}, options);
+
+  std::cout << "Dry run started!\n";
+  FLAGS_vfunc_call_count = 0;
+  tmp.dim();
+  std::cout << "Dry run is done!\n";
+  std::cout << "vfunc_call_count: " << FLAGS_vfunc_call_count << "\n";
+}
+
+  auto options = at::TensorOptions(at::kCPU);
+
+  // initialize some cuda...
+  auto tmp = torch::empty({0}, options);
+
+  for (auto _ : state) {
+    benchmark::DoNotOptimize(tmp.dim());
+  }
+}
+BENCHMARK(BM_VariableDim)->Iterations(iterations);
 
 static void BM_MakeStorage(benchmark::State& state) {
 {
