@@ -517,21 +517,6 @@ static void BM_AtenEmptyResize(benchmark::State& state) {
 }
 BENCHMARK(BM_AtenEmptyResize);
 
-static void BM_AtenEmptyNoResize(benchmark::State& state) {
-  auto options = at::TensorOptions(at::kCUDA);
-  std::vector<long int> sizes({64, 2048});
-
-  // initialize some cuda...
-  auto tmp = at::empty({0}, options);
-  tmp.resize_(sizes);
-
-  for (auto _ : state) {
-    auto tensor = at::empty(sizes, options);
-  }
-}
-BENCHMARK(BM_AtenEmptyNoResize);
-
-
 static void BM_VariableEmptyResize(benchmark::State& state) {
   auto options = at::TensorOptions(at::kCUDA);
   std::vector<long int> sizes({64, 2048});
@@ -547,6 +532,20 @@ static void BM_VariableEmptyResize(benchmark::State& state) {
   }
 }
 BENCHMARK(BM_VariableEmptyResize);
+
+static void BM_AtenEmptyNoResize(benchmark::State& state) {
+  auto options = at::TensorOptions(at::kCUDA);
+  std::vector<long int> sizes({64, 2048});
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+  tmp.resize_(sizes);
+
+  for (auto _ : state) {
+    auto tensor = at::empty(sizes, options);
+  }
+}
+BENCHMARK(BM_AtenEmptyNoResize);
 
 static void BM_VariableEmptyNoResize(benchmark::State& state) {
   auto options = at::TensorOptions(at::kCUDA);
