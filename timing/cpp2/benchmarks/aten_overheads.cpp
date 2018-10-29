@@ -72,6 +72,18 @@ static void BM_TensorDim(benchmark::State& state) {
 }
 BENCHMARK(BM_TensorDim);
 
+static void BM_VariableDim(benchmark::State& state) {
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = torch::empty({0}, options);
+
+  for (auto _ : state) {
+    benchmark::DoNotOptimize(tmp.dim());
+  }
+}
+BENCHMARK(BM_VariableDim);
+
 static void BM_TensorIsSparse(benchmark::State& state) {
   auto options = at::TensorOptions(at::kCUDA);
 
@@ -107,6 +119,66 @@ static void BM_TensorNumel(benchmark::State& state) {
   }
 }
 BENCHMARK(BM_TensorNumel);
+
+static void BM_VariableNumel(benchmark::State& state) {
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = torch::empty({0}, options);
+
+  for (auto _ : state) {
+    benchmark::DoNotOptimize(tmp.numel());
+  }
+}
+BENCHMARK(BM_VariableNumel);
+
+static void BM_TensorSize(benchmark::State& state) {
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+
+  for (auto _ : state) {
+    benchmark::DoNotOptimize(tmp.size(0));
+  }
+}
+BENCHMARK(BM_TensorSize);
+
+static void BM_VariableSize(benchmark::State& state) {
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = torch::empty({0}, options);
+
+  for (auto _ : state) {
+    benchmark::DoNotOptimize(tmp.size(0));
+  }
+}
+BENCHMARK(BM_VariableSize);
+
+static void BM_TensorSizes(benchmark::State& state) {
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+
+  for (auto _ : state) {
+    benchmark::DoNotOptimize(tmp.sizes());
+  }
+}
+BENCHMARK(BM_TensorSizes);
+
+static void BM_VariableSizes(benchmark::State& state) {
+  auto options = at::TensorOptions(at::kCUDA);
+
+  // initialize some cuda...
+  auto tmp = torch::empty({0}, options);
+
+  for (auto _ : state) {
+    benchmark::DoNotOptimize(tmp.sizes());
+  }
+}
+BENCHMARK(BM_VariableSizes);
 
 static void BM_CudaAPIGetDevice(benchmark::State& state) {
   auto options = at::TensorOptions(at::kCUDA);
@@ -258,6 +330,34 @@ static void BM_DeviceGuard(benchmark::State& state) {
 }
 BENCHMARK(BM_DeviceGuard);
 
+static void BM_EmptyTensorNoopReshape(benchmark::State& state) {
+  auto options = at::TensorOptions(at::kCUDA);
+  std::vector<long int> sizes({0});
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+  tmp.reshape(sizes);
+
+  for (auto _ : state) {
+    tmp.reshape(sizes);
+  }
+}
+BENCHMARK(BM_EmptyTensorNoopReshape);
+
+static void BM_EmptyVariableNoopReshape(benchmark::State& state) {
+  auto options = at::TensorOptions(at::kCUDA);
+  std::vector<long int> sizes({0});
+
+  // initialize some cuda...
+  auto tmp = torch::empty({0}, options);
+  tmp.reshape(sizes);
+
+  for (auto _ : state) {
+    tmp.reshape(sizes);
+  }
+}
+BENCHMARK(BM_EmptyVariableNoopReshape);
+
 static void BM_EmptyTensorNoopResize(benchmark::State& state) {
   auto options = at::TensorOptions(at::kCUDA);
   std::vector<long int> sizes({0});
@@ -271,6 +371,20 @@ static void BM_EmptyTensorNoopResize(benchmark::State& state) {
   }
 }
 BENCHMARK(BM_EmptyTensorNoopResize);
+
+static void BM_EmptyVariableNoopResize(benchmark::State& state) {
+  auto options = at::TensorOptions(at::kCUDA);
+  std::vector<long int> sizes({0});
+
+  // initialize some cuda...
+  auto tmp = torch::empty({0}, options);
+  tmp.resize_(sizes);
+
+  for (auto _ : state) {
+    tmp.resize_(sizes);
+  }
+}
+BENCHMARK(BM_EmptyVariableNoopResize);
 
 //static void BM_NoopEmptyResizeNoDispatch(benchmark::State& state) {
 //  auto options = at::TensorOptions(at::kCUDA);
@@ -299,6 +413,48 @@ static void BM_TensorNoopResize(benchmark::State& state) {
   }
 }
 BENCHMARK(BM_TensorNoopResize);
+
+static void BM_VariableNoopResize(benchmark::State& state) {
+  auto options = at::TensorOptions(at::kCUDA);
+  std::vector<long int> sizes({64, 2048});
+
+  // initialize some cuda...
+  auto tmp = torch::empty({0}, options);
+  tmp.resize_(sizes);
+
+  for (auto _ : state) {
+    tmp.resize_(sizes);
+  }
+}
+BENCHMARK(BM_VariableNoopResize);
+
+static void BM_TensorNoopReshape(benchmark::State& state) {
+  auto options = at::TensorOptions(at::kCUDA);
+  std::vector<long int> sizes({1, 64 * 2048});
+
+  // initialize some cuda...
+  auto tmp = at::empty({64, 2048}, options);
+  tmp.reshape(sizes);
+
+  for (auto _ : state) {
+    tmp.reshape(sizes);
+  }
+}
+BENCHMARK(BM_TensorNoopReshape);
+
+static void BM_VariableNoopReshape(benchmark::State& state) {
+  auto options = at::TensorOptions(at::kCUDA);
+  std::vector<long int> sizes({1, 64 * 2048});
+
+  // initialize some cuda...
+  auto tmp = torch::empty({64, 2048}, options);
+  tmp.reshape(sizes);
+
+  for (auto _ : state) {
+    tmp.reshape(sizes);
+  }
+}
+BENCHMARK(BM_VariableNoopReshape);
 
 static void BM_TensorAsStrided(benchmark::State& state) {
   auto tensor = at::rand({2400});
