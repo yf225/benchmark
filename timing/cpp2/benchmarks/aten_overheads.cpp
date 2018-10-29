@@ -3,6 +3,18 @@
 #include <torch/torch.h>
 #include <ATen/cuda/CUDAContext.h>
 
+static void BM_VariableNoGrad(benchmark::State& state) {
+  auto options = at::TensorOptions(at::kCPU);
+
+  auto a = torch::ones({2, 2});
+  auto b = torch::randn({2, 2}, at::requires_grad());
+  auto c = a + b;
+  c.backward(); // a.grad() will now hold the gradient of c w.r.t. a.
+  std::cout << "a.grad(): " << a.grad() << "\n";
+  std::cout << "b.grad(): " << b.grad() << "\n";
+}
+BENCHMARK(BM_VariableNoGrad);
+
 static void BM_TensorDim(benchmark::State& state) {
   auto options = at::TensorOptions(at::kCPU);
 
