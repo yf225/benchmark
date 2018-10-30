@@ -2,6 +2,18 @@
 #include <benchmark/benchmark.h>
 #include <torch/torch.h>
 #include <ATen/cuda/CUDAContext.h>
+#include <typeinfo>
+
+static void BM_VariableClassName(benchmark::State& state) {
+  auto options = at::TensorOptions(at::kCPU);
+
+  auto a_at = at::ones({2, 2});
+  auto a_th = torch::ones({2, 2});
+
+  std::cout << "typeid(a_at): " << typeid(a_at).name() << "\n";
+  std::cout << "typeid(a_th): " << typeid(a_th).name() << "\n";
+}
+BENCHMARK(BM_VariableClassName);
 
 static void BM_VariableNoGrad(benchmark::State& state) {
   auto options = at::TensorOptions(at::kCPU);
