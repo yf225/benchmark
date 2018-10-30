@@ -15,6 +15,18 @@ static void BM_VariableClassName(benchmark::State& state) {
 }
 BENCHMARK(BM_VariableClassName);
 
+static void BM_TensorNoGrad(benchmark::State& state) {
+  auto options = at::TensorOptions(at::kCPU);
+
+  auto a = at::ones({2, 2}, at::requires_grad());
+  auto b = at::randn({2, 2}, at::requires_grad());
+  auto c = a + b;
+  c.backward(); // a.grad() will now hold the gradient of c w.r.t. a.
+  std::cout << "a.grad(): " << a.grad() << "\n";
+  std::cout << "b.grad(): " << b.grad() << "\n";
+}
+BENCHMARK(BM_TensorNoGrad);
+
 static void BM_VariableNoGrad(benchmark::State& state) {
   auto options = at::TensorOptions(at::kCPU);
 
