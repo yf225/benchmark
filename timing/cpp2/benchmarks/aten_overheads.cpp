@@ -2,6 +2,9 @@
 #include <benchmark/benchmark.h>
 #include <torch/torch.h>
 
+// TODO: is -O0 a better idea for preventing loading cached value? How to let GCC evaluate the function every time?
+// TODO: read https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html
+
 static void BM_TensorDim(benchmark::State& state) {
   auto options = at::TensorOptions(at::kCPU);
 
