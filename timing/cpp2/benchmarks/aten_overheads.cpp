@@ -1,7 +1,6 @@
 #include <iostream>
 #include <benchmark/benchmark.h>
 #include <torch/torch.h>
-#include <ATen/cuda/CUDAContext.h>
 
 static void BM_TensorDim(benchmark::State& state) {
   auto options = at::TensorOptions(at::kCPU);
@@ -154,102 +153,6 @@ static void BM_VariableNoopResize(benchmark::State& state) {
   }
 }
 BENCHMARK(BM_VariableNoopResize);
-
-static void BM_AtenEmptyCuda(benchmark::State& state) {
-  auto options = at::TensorOptions(at::kCUDA);
-
-  // initialize some cuda...
-  auto tmp = at::empty({0}, options);
-
-  for (auto _ : state) {
-    auto tensor = at::native::empty_cuda({0}, options);
-  }
-}
-BENCHMARK(BM_AtenEmptyCuda);
-
-static void BM_AtenEmpty(benchmark::State& state) {
-  auto options = at::TensorOptions(at::kCPU);
-
-  // initialize some cuda...
-  auto tmp = at::empty({0}, options);
-
-  for (auto _ : state) {
-    auto tensor = at::empty({0}, options);
-  }
-}
-BENCHMARK(BM_AtenEmpty);
-
-static void BM_VariableEmpty(benchmark::State& state) {
-  auto options = at::TensorOptions(at::kCPU);
-
-  // initialize some cuda...
-  auto tmp = torch::empty({0}, options);
-
-  for (auto _ : state) {
-    auto tensor = torch::empty({0}, options);
-  }
-}
-BENCHMARK(BM_VariableEmpty);
-
-static void BM_AtenEmptyResize(benchmark::State& state) {
-  auto options = at::TensorOptions(at::kCPU);
-  std::vector<long int> sizes({64, 2048});
-
-  // initialize some cuda...
-  auto tmp = at::empty({0}, options);
-  tmp.resize_(sizes);
-
-  for (auto _ : state) {
-    auto tensor = at::empty({0}, options);
-    tensor.resize_(sizes);
-  }
-}
-BENCHMARK(BM_AtenEmptyResize);
-
-static void BM_VariableEmptyResize(benchmark::State& state) {
-  auto options = at::TensorOptions(at::kCPU);
-  std::vector<long int> sizes({64, 2048});
-  std::vector<long int> zero({0});
-
-  // initialize some cuda...
-  auto tmp = torch::empty(zero, options);
-  tmp.resize_(sizes);
-
-  for (auto _ : state) {
-    auto tensor = torch::empty(zero, options);
-    tensor.resize_(sizes);
-  }
-}
-BENCHMARK(BM_VariableEmptyResize);
-
-static void BM_AtenEmptyNoResize(benchmark::State& state) {
-  auto options = at::TensorOptions(at::kCPU);
-  std::vector<long int> sizes({64, 2048});
-
-  // initialize some cuda...
-  auto tmp = at::empty({0}, options);
-  tmp.resize_(sizes);
-
-  for (auto _ : state) {
-    auto tensor = at::empty(sizes, options);
-  }
-}
-BENCHMARK(BM_AtenEmptyNoResize);
-
-static void BM_VariableEmptyNoResize(benchmark::State& state) {
-  auto options = at::TensorOptions(at::kCPU);
-  std::vector<long int> sizes({64, 2048});
-  std::vector<long int> zero({0});
-
-  // initialize some cuda...
-  auto tmp = torch::empty(zero, options);
-  tmp.resize_(sizes);
-
-  for (auto _ : state) {
-    benchmark::DoNotOptimize(torch::empty(sizes, options));
-  }
-}
-BENCHMARK(BM_VariableEmptyNoResize);
 
 BENCHMARK_MAIN();
 
