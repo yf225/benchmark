@@ -48,7 +48,7 @@ static uint32_t wipe_cache(size_t wipe_size) {
 // }
 // BENCHMARK(BM_WipeCache);
 
-static void BM_ChronoMeasureOverhead(benchmark::State& state) {
+static void BM_TensorDimNoWipeChronoOverhead(benchmark::State& state) {
   auto options = at::TensorOptions(at::kCPU);
 
   // initialize some cuda...
@@ -68,7 +68,7 @@ static void BM_ChronoMeasureOverhead(benchmark::State& state) {
   std::ostream cnull(0);
   cnull << res;
 }
-BENCHMARK(BM_ChronoMeasureOverhead)->UseManualTime()->Iterations(1000000);
+BENCHMARK(BM_TensorDimNoWipeChronoOverhead)->UseManualTime()->Iterations(1000000);
 
 static void BM_TensorDimNoWipe(benchmark::State& state) {
   auto options = at::TensorOptions(at::kCPU);
@@ -94,6 +94,29 @@ static void BM_TensorDimNoWipe(benchmark::State& state) {
   cnull << res;
 }
 BENCHMARK(BM_TensorDimNoWipe)->UseManualTime()->Iterations(1000000);
+
+static void BM_TensorDimWipeL1ChronoOverhead(benchmark::State& state) {
+  auto options = at::TensorOptions(at::kCPU);
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+  int64_t res = 0;
+
+  for (auto _ : state) {
+    wipe_cache(32 * 1024);
+    auto start = std::chrono::high_resolution_clock::now();
+
+    auto end   = std::chrono::high_resolution_clock::now();
+    auto elapsed_seconds =
+      std::chrono::duration_cast<std::chrono::duration<double>>(
+        end - start);
+
+    state.SetIterationTime(elapsed_seconds.count());
+  }
+  std::ostream cnull(0);
+  cnull << res;
+}
+BENCHMARK(BM_TensorDimWipeL1ChronoOverhead)->UseManualTime()->Iterations(100000);
 
 static void BM_TensorDimWipeL1(benchmark::State& state) {
   auto options = at::TensorOptions(at::kCPU);
@@ -121,6 +144,29 @@ static void BM_TensorDimWipeL1(benchmark::State& state) {
 }
 BENCHMARK(BM_TensorDimWipeL1)->UseManualTime()->Iterations(100000);
 
+static void BM_TensorDimWipeL1L2ChronoOverhead(benchmark::State& state) {
+  auto options = at::TensorOptions(at::kCPU);
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+  int64_t res = 0;
+
+  for (auto _ : state) {
+    wipe_cache((32 + 256) * 1024);
+    auto start = std::chrono::high_resolution_clock::now();
+
+    auto end   = std::chrono::high_resolution_clock::now();
+    auto elapsed_seconds =
+      std::chrono::duration_cast<std::chrono::duration<double>>(
+        end - start);
+
+    state.SetIterationTime(elapsed_seconds.count());
+  }
+  std::ostream cnull(0);
+  cnull << res;
+}
+BENCHMARK(BM_TensorDimWipeL1L2ChronoOverhead)->UseManualTime()->Iterations(10000);
+
 static void BM_TensorDimWipeL1L2(benchmark::State& state) {
   auto options = at::TensorOptions(at::kCPU);
 
@@ -146,6 +192,29 @@ static void BM_TensorDimWipeL1L2(benchmark::State& state) {
   cnull << res;
 }
 BENCHMARK(BM_TensorDimWipeL1L2)->UseManualTime()->Iterations(10000);
+
+static void BM_TensorDimWipeL1L2L3ChronoOverhead(benchmark::State& state) {
+  auto options = at::TensorOptions(at::kCPU);
+
+  // initialize some cuda...
+  auto tmp = at::empty({0}, options);
+  int64_t res = 0;
+
+  for (auto _ : state) {
+    wipe_cache((32 + 256 + 8192) * 1024);
+    auto start = std::chrono::high_resolution_clock::now();
+
+    auto end   = std::chrono::high_resolution_clock::now();
+    auto elapsed_seconds =
+      std::chrono::duration_cast<std::chrono::duration<double>>(
+        end - start);
+
+    state.SetIterationTime(elapsed_seconds.count());
+  }
+  std::ostream cnull(0);
+  cnull << res;
+}
+BENCHMARK(BM_TensorDimWipeL1L2L3ChronoOverhead)->UseManualTime()->Iterations(1000);
 
 static void BM_TensorDimWipeL1L2L3(benchmark::State& state) {
   auto options = at::TensorOptions(at::kCPU);
