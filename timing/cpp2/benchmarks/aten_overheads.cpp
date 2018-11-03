@@ -10,10 +10,13 @@ static void BM_TensorDim(benchmark::State& state) {
 
   // initialize some cuda...
   auto tmp = at::empty({0}, options);
+  int64_t res = 0;
 
   for (auto _ : state) {
-    benchmark::DoNotOptimize(tmp.dim());
+    benchmark::DoNotOptimize(res = tmp.dim());
   }
+  std::ostream cnull(0);
+  cnull << res;
 }
 BENCHMARK(BM_TensorDim);
 
@@ -22,10 +25,13 @@ static void BM_VariableDim(benchmark::State& state) {
 
   // initialize some cuda...
   auto tmp = torch::empty({0}, options);
+  int64_t res = 0;
 
   for (auto _ : state) {
-    benchmark::DoNotOptimize(tmp.dim());
+    benchmark::DoNotOptimize(res = tmp.dim());
   }
+  std::ostream cnull(0);
+  cnull << res;
 }
 BENCHMARK(BM_VariableDim);
 
@@ -34,10 +40,13 @@ static void BM_TensorNumel(benchmark::State& state) {
 
   // initialize some cuda...
   auto tmp = at::empty({0}, options);
+  int64_t res = 0;
 
   for (auto _ : state) {
-    benchmark::DoNotOptimize(tmp.numel());
+    benchmark::DoNotOptimize(res = tmp.numel());
   }
+  std::ostream cnull(0);
+  cnull << res;
 }
 BENCHMARK(BM_TensorNumel);
 
@@ -46,10 +55,13 @@ static void BM_VariableNumel(benchmark::State& state) {
 
   // initialize some cuda...
   auto tmp = torch::empty({0}, options);
+  int64_t res = 0;
 
   for (auto _ : state) {
-    benchmark::DoNotOptimize(tmp.numel());
+    benchmark::DoNotOptimize(res = tmp.numel());
   }
+  std::ostream cnull(0);
+  cnull << res;
 }
 BENCHMARK(BM_VariableNumel);
 
@@ -58,10 +70,13 @@ static void BM_TensorSize(benchmark::State& state) {
 
   // initialize some cuda...
   auto tmp = at::empty({0}, options);
+  int64_t res = 0;
 
   for (auto _ : state) {
-    benchmark::DoNotOptimize(tmp.size(0));
+    benchmark::DoNotOptimize(res = tmp.size(0));
   }
+  std::ostream cnull(0);
+  cnull << res;
 }
 BENCHMARK(BM_TensorSize);
 
@@ -70,10 +85,13 @@ static void BM_VariableSize(benchmark::State& state) {
 
   // initialize some cuda...
   auto tmp = torch::empty({0}, options);
+  int64_t res = 0;
 
   for (auto _ : state) {
-    benchmark::DoNotOptimize(tmp.size(0));
+    benchmark::DoNotOptimize(res = tmp.size(0));
   }
+  std::ostream cnull(0);
+  cnull << res;
 }
 BENCHMARK(BM_VariableSize);
 
@@ -82,10 +100,13 @@ static void BM_TensorSizes(benchmark::State& state) {
 
   // initialize some cuda...
   auto tmp = at::empty({0}, options);
+  at::IntList res;
 
   for (auto _ : state) {
-    benchmark::DoNotOptimize(tmp.sizes());
+    benchmark::DoNotOptimize(res = tmp.sizes());
   }
+  std::ostream cnull(0);
+  cnull << res;
 }
 BENCHMARK(BM_TensorSizes);
 
@@ -94,10 +115,13 @@ static void BM_VariableSizes(benchmark::State& state) {
 
   // initialize some cuda...
   auto tmp = torch::empty({0}, options);
+  at::IntList res;
 
   for (auto _ : state) {
-    benchmark::DoNotOptimize(tmp.sizes());
+    benchmark::DoNotOptimize(res = tmp.sizes());
   }
+  std::ostream cnull(0);
+  cnull << res;
 }
 BENCHMARK(BM_VariableSizes);
 
