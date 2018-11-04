@@ -140,35 +140,85 @@ BENCHMARK(BM_VariableDim)->Args({WIPE_L1_L2_CACHE, RUN_WORKLOAD})->UseManualTime
 BENCHMARK(BM_VariableDim)->Args({WIPE_L1_L2_L3_CACHE, DONT_RUN_WORKLOAD})->UseManualTime()->Iterations(1000);
 BENCHMARK(BM_VariableDim)->Args({WIPE_L1_L2_L3_CACHE, RUN_WORKLOAD})->UseManualTime()->Iterations(1000);
 
-// static void BM_TensorNumel(benchmark::State& state) {
-//   auto options = at::TensorOptions(at::kCPU);
+static void BM_TensorNumel(benchmark::State& state) {
+  int wipe_level = state.range(0);
+  bool run_workload = (state.range(1) == RUN_WORKLOAD);
 
-//   // initialize some cuda...
-//   auto tmp = at::empty({0}, options);
-//   int64_t res = 0;
+  auto options = at::TensorOptions(at::kCPU);
+  auto tmp = at::empty({0}, options);
+  int64_t res = 0;
 
-//   for (auto _ : state) {
-//     benchmark::DoNotOptimize(res = tmp.numel());
-//   }
-//   std::ostream cnull(0);
-//   cnull << res;
-// }
-// BENCHMARK(BM_TensorNumel);
+  for (auto _ : state) {
+    uint32_t* wipe_buffer = wipe_dcache_setup(wipe_level);
+    auto start = std::chrono::high_resolution_clock::now();
 
-// static void BM_VariableNumel(benchmark::State& state) {
-//   auto options = at::TensorOptions(at::kCPU);
+    if (run_workload) {
+      // Workload
+      benchmark::DoNotOptimize(res = tmp.numel());
+    }
 
-//   // initialize some cuda...
-//   auto tmp = torch::empty({0}, options);
-//   int64_t res = 0;
+    auto end   = std::chrono::high_resolution_clock::now();
+    auto elapsed_seconds =
+      std::chrono::duration_cast<std::chrono::duration<double>>(
+        end - start);
+    state.SetIterationTime(elapsed_seconds.count());
+    wipe_dcache_teardown(wipe_level, wipe_buffer);
+  }
+  std::ostream cnull(0);
+  cnull << res;
+}
+// No wipe
+BENCHMARK(BM_TensorNumel)->Args({WIPE_NO_CACHE, DONT_RUN_WORKLOAD})->UseManualTime()->Iterations(1000000);
+BENCHMARK(BM_TensorNumel)->Args({WIPE_NO_CACHE, RUN_WORKLOAD})->UseManualTime()->Iterations(1000000);
+// Wipe L1
+BENCHMARK(BM_TensorNumel)->Args({WIPE_L1_CACHE, DONT_RUN_WORKLOAD})->UseManualTime()->Iterations(100000);
+BENCHMARK(BM_TensorNumel)->Args({WIPE_L1_CACHE, RUN_WORKLOAD})->UseManualTime()->Iterations(100000);
+// Wipe L1 + L2
+BENCHMARK(BM_TensorNumel)->Args({WIPE_L1_L2_CACHE, DONT_RUN_WORKLOAD})->UseManualTime()->Iterations(10000);
+BENCHMARK(BM_TensorNumel)->Args({WIPE_L1_L2_CACHE, RUN_WORKLOAD})->UseManualTime()->Iterations(10000);
+// Wipe L1 + L2 + L3
+BENCHMARK(BM_TensorNumel)->Args({WIPE_L1_L2_L3_CACHE, DONT_RUN_WORKLOAD})->UseManualTime()->Iterations(1000);
+BENCHMARK(BM_TensorNumel)->Args({WIPE_L1_L2_L3_CACHE, RUN_WORKLOAD})->UseManualTime()->Iterations(1000);
 
-//   for (auto _ : state) {
-//     benchmark::DoNotOptimize(res = tmp.numel());
-//   }
-//   std::ostream cnull(0);
-//   cnull << res;
-// }
-// BENCHMARK(BM_VariableNumel);
+static void BM_VariableNumel(benchmark::State& state) {
+  int wipe_level = state.range(0);
+  bool run_workload = (state.range(1) == RUN_WORKLOAD);
+
+  auto options = at::TensorOptions(at::kCPU);
+  auto tmp = torch::empty({0}, options);
+  int64_t res = 0;
+
+  for (auto _ : state) {
+    uint32_t* wipe_buffer = wipe_dcache_setup(wipe_level);
+    auto start = std::chrono::high_resolution_clock::now();
+
+    if (run_workload) {
+      // Workload
+      benchmark::DoNotOptimize(res = tmp.numel());
+    }
+
+    auto end   = std::chrono::high_resolution_clock::now();
+    auto elapsed_seconds =
+      std::chrono::duration_cast<std::chrono::duration<double>>(
+        end - start);
+    state.SetIterationTime(elapsed_seconds.count());
+    wipe_dcache_teardown(wipe_level, wipe_buffer);
+  }
+  std::ostream cnull(0);
+  cnull << res;
+}
+// No wipe
+BENCHMARK(BM_VariableNumel)->Args({WIPE_NO_CACHE, DONT_RUN_WORKLOAD})->UseManualTime()->Iterations(1000000);
+BENCHMARK(BM_VariableNumel)->Args({WIPE_NO_CACHE, RUN_WORKLOAD})->UseManualTime()->Iterations(1000000);
+// Wipe L1
+BENCHMARK(BM_VariableNumel)->Args({WIPE_L1_CACHE, DONT_RUN_WORKLOAD})->UseManualTime()->Iterations(100000);
+BENCHMARK(BM_VariableNumel)->Args({WIPE_L1_CACHE, RUN_WORKLOAD})->UseManualTime()->Iterations(100000);
+// Wipe L1 + L2
+BENCHMARK(BM_VariableNumel)->Args({WIPE_L1_L2_CACHE, DONT_RUN_WORKLOAD})->UseManualTime()->Iterations(10000);
+BENCHMARK(BM_VariableNumel)->Args({WIPE_L1_L2_CACHE, RUN_WORKLOAD})->UseManualTime()->Iterations(10000);
+// Wipe L1 + L2 + L3
+BENCHMARK(BM_VariableNumel)->Args({WIPE_L1_L2_L3_CACHE, DONT_RUN_WORKLOAD})->UseManualTime()->Iterations(1000);
+BENCHMARK(BM_VariableNumel)->Args({WIPE_L1_L2_L3_CACHE, RUN_WORKLOAD})->UseManualTime()->Iterations(1000);
 
 // static void BM_TensorSize(benchmark::State& state) {
 //   auto options = at::TensorOptions(at::kCPU);
