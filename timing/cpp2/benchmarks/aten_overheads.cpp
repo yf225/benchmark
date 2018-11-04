@@ -12,32 +12,57 @@ static int WIPE_L1_L2_L3_CACHE = 3;
 static int DONT_RUN_WORKLOAD = 0;
 static int RUN_WORKLOAD = 1;
 
-static uint32_t wipe_dcache(size_t wipe_size) {
+static size_t get_cache_size(int wipe_level) {
+  /*
+    On c1.small.x86 (E3-1240 V5) (Packet)
+    L1 Data 32K (x4)
+    L1 Instruction 32K (x4)
+    L2 Unified 256K (x4)
+    L3 Unified 8192K (x1)
+  */
+  if (wipe_level == WIPE_NO_CACHE) {
+    return 0;
+  } else if (wipe_level == WIPE_L1_CACHE) {  // Wipe L1 cache
+    return 32 * 1024;
+  } else if (wipe_level == WIPE_L1_L2_CACHE) {  // Wipe L1 + L2 cache
+    return (32 + 256) * 1024;
+  } else if (wipe_level == WIPE_L1_L2_L3_CACHE) {  // Wipe L1 + L2 + L3 cache
+    return (32 + 256 + 8192) * 1024;
+  }
+}
+
+static uint32_t* wipe_dcache_setup(int wipe_level) {
   uint32_t* wipe_buffer = nullptr;
+  size_t wipe_size = get_cache_size(wipe_level);
 
   if (wipe_buffer == nullptr) {
-    /*
-      On c1.small.x86 (Packet)
-      L1 Data 32K (x4)
-      L1 Instruction 32K (x4)
-      L2 Unified 256K (x4)
-      L3 Unified 8192K (x1)
-      L1 + L2: 288K
-      L1 + L2 + L3: 8480K
-    */
     wipe_buffer = static_cast<uint32_t*>(malloc(wipe_size));
     AT_ASSERT(wipe_buffer != nullptr);
   }
   uint32_t hash = 0;
   for (uint32_t i = 0; i * sizeof(uint32_t) < wipe_size; i += 8) {
-    hash ^= wipe_buffer[i];
+    hash ^= std::rand();
     wipe_buffer[i] = hash;
   }
   /* Make sure compiler doesn't optimize the loop away */
-  return hash;
+  return wipe_buffer;
+}
+
+static void wipe_dcache_teardown(int wipe_level, uint32_t* wipe_buffer) {
+  size_t wipe_size = get_cache_size(wipe_level);
+
+  if (wipe_size > 0) {
+    std::ostream cnull(0);
+    for (uint32_t i = 0; i * sizeof(uint32_t) < wipe_size; i += 8) {
+      cnull << wipe_buffer[i];
+    }
+    free(wipe_buffer);
+  }
 }
 
 static void BM_TensorDim(benchmark::State& state) {
+  std::ostream cnull(0);
+
   int wipe_level = state.range(0);
   bool run_workload = (state.range(1) == RUN_WORKLOAD);
 
@@ -48,15 +73,7 @@ static void BM_TensorDim(benchmark::State& state) {
   int64_t res = 0;
 
   for (auto _ : state) {
-    if (wipe_level == WIPE_NO_CACHE) {
-      // no-op
-    } else if (wipe_level == WIPE_L1_CACHE) {  // Wipe L1 cache
-      wipe_dcache(32 * 1024);
-    } else if (wipe_level == WIPE_L1_L2_CACHE) {  // Wipe L1 + L2 cache
-      wipe_dcache((32 + 256) * 1024);
-    } else if (wipe_level == WIPE_L1_L2_L3_CACHE) {  // Wipe L1 + L2 + L3 cache
-      wipe_dcache((32 + 256 + 8192) * 1024);
-    }
+    uint32_t* wipe_buffer = wipe_dcache_setup(wipe_level);
     
     auto start = std::chrono::high_resolution_clock::now();
 
@@ -70,8 +87,9 @@ static void BM_TensorDim(benchmark::State& state) {
         end - start);
 
     state.SetIterationTime(elapsed_seconds.count());
+
+    wipe_dcache_teardown(wipe_level, wipe_buffer);
   }
-  std::ostream cnull(0);
   cnull << res;
 }
 // No wipe
