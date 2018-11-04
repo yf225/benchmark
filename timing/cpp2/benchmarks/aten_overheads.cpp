@@ -4,9 +4,6 @@
 #include <benchmark/benchmark.h>
 #include <torch/torch.h>
 
-// TODO: is -O0 a better idea for preventing loading cached value? How to let GCC evaluate the function every time?
-// TODO: read https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html
-
 static uint32_t wipe_dcache(size_t wipe_size) {
   uint32_t* wipe_buffer = nullptr;
 
@@ -39,37 +36,6 @@ static uint32_t wipe_dcache(size_t wipe_size) {
   return hash;
 }
 
-// static void BM_WipeCache(benchmark::State& state) {
-//   auto options = at::TensorOptions(at::kCPU);
-
-//   for (auto _ : state) {
-//     wipe_dcache();
-//   }
-// }
-// BENCHMARK(BM_WipeCache);
-
-static void BM_TensorDimNoWipeChronoOverhead(benchmark::State& state) {
-  auto options = at::TensorOptions(at::kCPU);
-
-  // initialize some cuda...
-  auto tmp = at::empty({0}, options);
-  int64_t res = 0;
-
-  for (auto _ : state) {
-    auto start = std::chrono::high_resolution_clock::now();
-
-    auto end   = std::chrono::high_resolution_clock::now();
-    auto elapsed_seconds =
-      std::chrono::duration_cast<std::chrono::duration<double>>(
-        end - start);
-
-    state.SetIterationTime(elapsed_seconds.count());
-  }
-  std::ostream cnull(0);
-  cnull << res;
-}
-BENCHMARK(BM_TensorDimNoWipeChronoOverhead)->UseManualTime()->Iterations(1000000);
-
 static void BM_TensorDimNoWipe(benchmark::State& state) {
   auto options = at::TensorOptions(at::kCPU);
 
@@ -78,22 +44,13 @@ static void BM_TensorDimNoWipe(benchmark::State& state) {
   int64_t res = 0;
 
   for (auto _ : state) {
-    auto start = std::chrono::high_resolution_clock::now();
-
     // Workload
     benchmark::DoNotOptimize(res = tmp.dim());
-
-    auto end   = std::chrono::high_resolution_clock::now();
-    auto elapsed_seconds =
-      std::chrono::duration_cast<std::chrono::duration<double>>(
-        end - start);
-
-    state.SetIterationTime(elapsed_seconds.count());
   }
   std::ostream cnull(0);
   cnull << res;
 }
-BENCHMARK(BM_TensorDimNoWipe)->UseManualTime()->Iterations(1000000);
+BENCHMARK(BM_TensorDimNoWipe)->Iterations(1000000);
 
 static void BM_TensorDimWipeL1ChronoOverhead(benchmark::State& state) {
   auto options = at::TensorOptions(at::kCPU);
