@@ -60,15 +60,28 @@ static void wipe_dcache_teardown(int wipe_level, uint32_t* wipe_buffer) {
   }
 }
 
+static int random_in_range(int min, int max) {
+  static bool first = true;
+  if (first) {
+    srand( time(NULL) ); //seeding for the first time only!
+    first = false;
+  }
+  return min + rand() % (( max + 1 ) - min);
+}
+
 static void BM_TensorDim(benchmark::State& state) {
   int wipe_level = state.range(0);
   bool run_workload = (state.range(1) == RUN_WORKLOAD);
-
-  auto options = at::TensorOptions(at::kCPU);
-  auto tmp = at::empty({0}, options);
   int64_t res = 0;
 
   for (auto _ : state) {
+    // Workload setup
+    std::vector<int64_t> tensor_sizes = {};
+    for (int i = 0; i < random_in_range(1, 5); i++) {
+      tensor_sizes.push_back(2);
+    }
+    auto tmp = at::empty(tensor_sizes, at::TensorOptions(at::kCPU));
+
     uint32_t* wipe_buffer = wipe_dcache_setup(wipe_level);
     auto start = std::chrono::high_resolution_clock::now();
 
@@ -103,12 +116,16 @@ BENCHMARK(BM_TensorDim)->Args({WIPE_L1_L2_L3_CACHE, RUN_WORKLOAD})->UseManualTim
 static void BM_VariableDim(benchmark::State& state) {
   int wipe_level = state.range(0);
   bool run_workload = (state.range(1) == RUN_WORKLOAD);
-
-  auto options = at::TensorOptions(at::kCPU);
-  auto tmp = torch::empty({0}, options);
   int64_t res = 0;
 
   for (auto _ : state) {
+    // Workload setup
+    std::vector<int64_t> tensor_sizes = {};
+    for (int i = 0; i < random_in_range(1, 5); i++) {
+      tensor_sizes.push_back(2);
+    }
+    auto tmp = torch::empty(tensor_sizes, at::TensorOptions(at::kCPU));
+
     uint32_t* wipe_buffer = wipe_dcache_setup(wipe_level);
     auto start = std::chrono::high_resolution_clock::now();
 
@@ -143,12 +160,16 @@ BENCHMARK(BM_VariableDim)->Args({WIPE_L1_L2_L3_CACHE, RUN_WORKLOAD})->UseManualT
 static void BM_TensorNumel(benchmark::State& state) {
   int wipe_level = state.range(0);
   bool run_workload = (state.range(1) == RUN_WORKLOAD);
-
-  auto options = at::TensorOptions(at::kCPU);
-  auto tmp = at::empty({0}, options);
   int64_t res = 0;
 
   for (auto _ : state) {
+    // Workload setup
+    std::vector<int64_t> tensor_sizes = {};
+    for (int i = 0; i < random_in_range(1, 5); i++) {
+      tensor_sizes.push_back(2);
+    }
+    auto tmp = at::empty(tensor_sizes, at::TensorOptions(at::kCPU));
+
     uint32_t* wipe_buffer = wipe_dcache_setup(wipe_level);
     auto start = std::chrono::high_resolution_clock::now();
 
@@ -183,12 +204,16 @@ BENCHMARK(BM_TensorNumel)->Args({WIPE_L1_L2_L3_CACHE, RUN_WORKLOAD})->UseManualT
 static void BM_VariableNumel(benchmark::State& state) {
   int wipe_level = state.range(0);
   bool run_workload = (state.range(1) == RUN_WORKLOAD);
-
-  auto options = at::TensorOptions(at::kCPU);
-  auto tmp = torch::empty({0}, options);
   int64_t res = 0;
 
   for (auto _ : state) {
+    // Workload setup
+    std::vector<int64_t> tensor_sizes = {};
+    for (int i = 0; i < random_in_range(1, 5); i++) {
+      tensor_sizes.push_back(2);
+    }
+    auto tmp = torch::empty(tensor_sizes, at::TensorOptions(at::kCPU));
+
     uint32_t* wipe_buffer = wipe_dcache_setup(wipe_level);
     auto start = std::chrono::high_resolution_clock::now();
 
@@ -223,12 +248,13 @@ BENCHMARK(BM_VariableNumel)->Args({WIPE_L1_L2_L3_CACHE, RUN_WORKLOAD})->UseManua
 static void BM_TensorSize(benchmark::State& state) {
   int wipe_level = state.range(0);
   bool run_workload = (state.range(1) == RUN_WORKLOAD);
-
-  auto options = at::TensorOptions(at::kCPU);
-  auto tmp = at::empty({0}, options);
   int64_t res = 0;
 
   for (auto _ : state) {
+    // Workload setup
+    std::vector<int64_t> tensor_sizes = {random_in_range(1, 5)};
+    auto tmp = at::empty(tensor_sizes, at::TensorOptions(at::kCPU));
+
     uint32_t* wipe_buffer = wipe_dcache_setup(wipe_level);
     auto start = std::chrono::high_resolution_clock::now();
 
@@ -263,12 +289,13 @@ BENCHMARK(BM_TensorSize)->Args({WIPE_L1_L2_L3_CACHE, RUN_WORKLOAD})->UseManualTi
 static void BM_VariableSize(benchmark::State& state) {
   int wipe_level = state.range(0);
   bool run_workload = (state.range(1) == RUN_WORKLOAD);
-
-  auto options = at::TensorOptions(at::kCPU);
-  auto tmp = torch::empty({0}, options);
   int64_t res = 0;
 
   for (auto _ : state) {
+    // Workload setup
+    std::vector<int64_t> tensor_sizes = {random_in_range(1, 5)};
+    auto tmp = torch::empty(tensor_sizes, at::TensorOptions(at::kCPU));
+
     uint32_t* wipe_buffer = wipe_dcache_setup(wipe_level);
     auto start = std::chrono::high_resolution_clock::now();
 
@@ -303,12 +330,13 @@ BENCHMARK(BM_VariableSize)->Args({WIPE_L1_L2_L3_CACHE, RUN_WORKLOAD})->UseManual
 static void BM_TensorSizes(benchmark::State& state) {
   int wipe_level = state.range(0);
   bool run_workload = (state.range(1) == RUN_WORKLOAD);
-
-  auto options = at::TensorOptions(at::kCPU);
-  auto tmp = at::empty({0}, options);
   at::IntList res;
 
   for (auto _ : state) {
+    // Workload setup
+    std::vector<int64_t> tensor_sizes = {random_in_range(1, 5)};
+    auto tmp = at::empty(tensor_sizes, at::TensorOptions(at::kCPU));
+
     uint32_t* wipe_buffer = wipe_dcache_setup(wipe_level);
     auto start = std::chrono::high_resolution_clock::now();
 
@@ -343,12 +371,13 @@ BENCHMARK(BM_TensorSizes)->Args({WIPE_L1_L2_L3_CACHE, RUN_WORKLOAD})->UseManualT
 static void BM_VariableSizes(benchmark::State& state) {
   int wipe_level = state.range(0);
   bool run_workload = (state.range(1) == RUN_WORKLOAD);
-
-  auto options = at::TensorOptions(at::kCPU);
-  auto tmp = torch::empty({0}, options);
   at::IntList res;
 
   for (auto _ : state) {
+    // Workload setup
+    std::vector<int64_t> tensor_sizes = {random_in_range(1, 5)};
+    auto tmp = torch::empty(tensor_sizes, at::TensorOptions(at::kCPU));
+
     uint32_t* wipe_buffer = wipe_dcache_setup(wipe_level);
     auto start = std::chrono::high_resolution_clock::now();
 
@@ -384,12 +413,12 @@ static void BM_EmptyTensorNoopResize(benchmark::State& state) {
   int wipe_level = state.range(0);
   bool run_workload = (state.range(1) == RUN_WORKLOAD);
 
-  auto options = at::TensorOptions(at::kCPU);
-  std::vector<long int> sizes({0});
-  auto tmp = at::empty({0}, options);
-  tmp.resize_(sizes);
-
   for (auto _ : state) {
+    // Workload setup
+    std::vector<long int> sizes({0});
+    auto tmp = at::empty({0}, at::TensorOptions(at::kCPU));
+    tmp.resize_(sizes);
+
     uint32_t* wipe_buffer = wipe_dcache_setup(wipe_level);
     auto start = std::chrono::high_resolution_clock::now();
 
@@ -423,12 +452,12 @@ static void BM_EmptyVariableNoopResize(benchmark::State& state) {
   int wipe_level = state.range(0);
   bool run_workload = (state.range(1) == RUN_WORKLOAD);
 
-  auto options = at::TensorOptions(at::kCPU);
-  std::vector<long int> sizes({0});
-  auto tmp = torch::empty({0}, options);
-  tmp.resize_(sizes);
-
   for (auto _ : state) {
+    // Workload setup
+    std::vector<long int> sizes({0});
+    auto tmp = torch::empty({0}, at::TensorOptions(at::kCPU));
+    tmp.resize_(sizes);
+
     uint32_t* wipe_buffer = wipe_dcache_setup(wipe_level);
     auto start = std::chrono::high_resolution_clock::now();
 
@@ -462,12 +491,12 @@ static void BM_TensorNoopResize(benchmark::State& state) {
   int wipe_level = state.range(0);
   bool run_workload = (state.range(1) == RUN_WORKLOAD);
 
-  auto options = at::TensorOptions(at::kCPU);
-  std::vector<long int> sizes({64, 2048});
-  auto tmp = at::empty({0}, options);
-  tmp.resize_(sizes);
-
   for (auto _ : state) {
+    // Workload setup
+    std::vector<long int> sizes({64, 2048});
+    auto tmp = at::empty({0}, at::TensorOptions(at::kCPU));
+    tmp.resize_(sizes);
+
     uint32_t* wipe_buffer = wipe_dcache_setup(wipe_level);
     auto start = std::chrono::high_resolution_clock::now();
 
@@ -501,12 +530,12 @@ static void BM_VariableNoopResize(benchmark::State& state) {
   int wipe_level = state.range(0);
   bool run_workload = (state.range(1) == RUN_WORKLOAD);
 
-  auto options = at::TensorOptions(at::kCPU);
-  std::vector<long int> sizes({64, 2048});
-  auto tmp = torch::empty({0}, options);
-  tmp.resize_(sizes);
-
   for (auto _ : state) {
+    // Workload setup
+    std::vector<long int> sizes({64, 2048});
+    auto tmp = torch::empty({0}, at::TensorOptions(at::kCPU));
+    tmp.resize_(sizes);
+
     uint32_t* wipe_buffer = wipe_dcache_setup(wipe_level);
     auto start = std::chrono::high_resolution_clock::now();
 
